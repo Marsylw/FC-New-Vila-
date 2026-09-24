@@ -168,7 +168,7 @@
     <img src="/logo.jpg" alt="FC New Vila" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%23152a52%22/><text x=%2216%22 y=%2220%22 font-size=%2210%22 fill=%22%23c9a227%22 text-anchor=%22middle%22>NV</text></svg>'">
     <h1>FC New Vila</h1>
     <a href="/" class="nav-link">Início</a>
-    <a href="/admin" class="nav-link">Painel</a>
+    <a href="admin" class="nav-link">Painel</a>
     <button class="btn-sair" onclick="sair()">Sair</button>
   </header>
 
@@ -229,7 +229,7 @@
       </div>
 
       <button class="primary" id="btn-sugerir" onclick="sugerirJogo()">
-        <span>⚽ Sugerir jogo</span>
+        <span>Sugerir jogo</span>
       </button>
       <div id="sugerir-msg" class="msg-box"></div>
     </div>
@@ -305,10 +305,10 @@
 
       <div class="btn-group">
         <button class="secondary" type="button" id="btn-gerar-codigo" onclick="gerarNovoCodigo()">
-          <span>🎲 Gerar novo código</span>
+          <span> Gerar novo código</span>
         </button>
         <button class="primary" type="button" id="btn-guardar-codigo" style="margin-top:0;" onclick="guardarCodigo()">
-          <span>💾 Guardar código</span>
+          <span> Guardar código</span>
         </button>
       </div>
       <div id="codigo-msg" class="msg-box"></div>
@@ -485,7 +485,7 @@ function copiarCodigoBadge(){
     const btn = document.querySelector('.btn-copy');
     if(btn){
       const original = btn.textContent;
-      btn.textContent = '✓ Copiado!';
+      btn.textContent = 'Copiado!';
       setTimeout(()=>{ btn.textContent = original; }, 2000);
     }
   }).catch(()=>{});
@@ -539,7 +539,7 @@ async function sugerirJogo(){
       return;
     }
 
-    msg.textContent = '✓ Sugestão enviada com sucesso! A organização irá analisar.';
+    msg.textContent = 'Sugestão enviada com sucesso! A organização irá analisar.';
     msg.className = 'msg-box ok';
     document.getElementById('s-adversario').value = '';
     document.getElementById('s-local').value = '';
@@ -550,7 +550,7 @@ async function sugerirJogo(){
     mostrarErroGlobal(e);
   }finally{
     btn.disabled = false;
-    btn.innerHTML = '<span>⚽ Sugerir jogo</span>';
+    btn.innerHTML = '<span>Sugerir jogo</span>';
   }
 }
 
@@ -589,7 +589,7 @@ async function mudarNome(){
     document.getElementById('p-nome').textContent = novoNome;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    msg.textContent = '✓ Nome atualizado com sucesso!';
+    msg.textContent = 'Nome atualizado com sucesso!';
     msg.className = 'msg-box ok';
     setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className='msg-box'; }, 3500);
   }catch(e){
@@ -698,13 +698,13 @@ async function guardarCodigo(){
     const badge = document.getElementById('p-codigo-badge');
     if(badge) badge.textContent = novoCodigo;
 
-    msg.textContent = `✓ Código atualizado com sucesso para "${novoCodigo}"! Usa-o para entrar da próxima vez.`;
+    msg.textContent = `Código atualizado com sucesso para "${novoCodigo}"! Usa-o para entrar da próxima vez.`;
     msg.className = 'msg-box ok';
   }catch(e){
     mostrarErroGlobal(e);
   }finally{
     btn.disabled = false;
-    btn.innerHTML = '<span>💾 Guardar código</span>';
+    btn.innerHTML = '<span>Guardar código</span>';
   }
 }
 
@@ -728,7 +728,7 @@ async function enviarFoto(ev){
     jogador.foto_url = url;
     document.getElementById('foto-img').src = url;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
-    fotoMsg.textContent = '✓ Foto atualizada com sucesso.';
+    fotoMsg.textContent = 'Foto atualizada com sucesso.';
     setTimeout(()=>{ fotoMsg.textContent=''; }, 3500);
   }catch(e){
     fotoMsg.textContent = 'Erro: ' + e.message;
