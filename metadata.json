@@ -1,0 +1,7 @@
+{
+  "name": "FC New Vila",
+  "description": "Plataforma oficial do clube FC New Vila com gestão de jogos, plantel e perfil de atletas.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "fc-new-vila",
+  "version": "1.0.0",
+  "description": "FC New Vila - Gestão e Informação do Clube",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "echo 'Build complete'",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
