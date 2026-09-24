@@ -137,8 +137,8 @@
   <header>
     <img src="/logo.jpg" alt="FC New Vila">
     <h1>FC New Vila — Painel</h1>
-    <a href="/" class="nav-link">Site</a>
-    <a href="/perfil" class="nav-link">Perfil Atleta</a>
+    <a href="publico.htm" class="nav-link">Site</a>
+    <a href="perfil.html" class="nav-link">Perfil Atleta</a>
     <span class="who" id="who"></span>
     <button class="btn-sair" onclick="sair()">Sair</button>
   </header>
@@ -162,7 +162,7 @@
           <div><label>Nome do atleta *</label><input id="j-nome" placeholder="ex: João Silva"></div>
           <div><label>Posição</label>
             <select id="j-posicao">
-              <option>Guarda-redes</option><option>Defesa</option><option>Médio</option><option selected>Avançado</option>
+              <option>Guarda-redes</option><option>Central</option><option>Lateral</option><option>Médio</option><option>Extremo</option><option selected>Avançado</option>
             </select>
           </div>
         </div>
@@ -476,7 +476,7 @@ async function adminGerarNovoCodigo(id, nome){
 
   const { error } = await sb.from('jogadores').update({ codigo_pessoal: novo }).eq('id', id);
   if(error){ showMsg('Erro ao atualizar código: ' + error.message); return; }
-  showMsg(`✓ Novo código gerado para ${nome}: ${novo}`, true);
+  showMsg(`Novo código gerado para ${nome}: ${novo}`, true);
   carregarJogadores();
 }
 
@@ -497,7 +497,7 @@ async function adminEditarCodigo(id, nome, codAtual){
 
   const { error } = await sb.from('jogadores').update({ codigo_pessoal: limpo }).eq('id', id);
   if(error){ showMsg('Erro ao atualizar: ' + error.message); return; }
-  showMsg(`✓ Código de ${nome} atualizado para: ${limpo}`, true);
+  showMsg(`Código de ${nome} atualizado para: ${limpo}`, true);
   carregarJogadores();
 }
 
@@ -521,7 +521,7 @@ async function addEquipamento(){
   };
   const { error } = await sb.from('equipamentos').insert(body);
   if(error){ showMsg(error.message); return; }
-  showMsg('✓ Equipamento guardado com sucesso.', true);
+  showMsg('Equipamento guardado com sucesso.', true);
   carregarEquipamentos();
 }
 
@@ -546,7 +546,7 @@ async function addPagamento(){
   };
   const { error } = await sb.from('pagamentos').insert(body);
   if(error){ showMsg(error.message); return; }
-  showMsg('✓ Pagamento registado com sucesso.', true);
+  showMsg('Pagamento registado com sucesso.', true);
   document.getElementById('p-valor').value = '';
   document.getElementById('p-comprovativo').value = '';
   carregarPagamentos();
@@ -617,7 +617,7 @@ async function addJogo(){
     else { showMsg('Erro ao marcar jogo: ' + error.message); }
     return;
   }
-  showMsg('✓ Jogo marcado com sucesso.', true);
+  showMsg('Jogo marcado com sucesso.', true);
   document.getElementById('g-adversario').value = '';
   document.getElementById('g-local').value = '';
   carregarJogos();
@@ -630,7 +630,7 @@ async function confirmarJogo(id){
     else { showMsg(error.message); }
     return;
   }
-  showMsg('✓ Sugestão aprovada e jogo confirmado.', true);
+  showMsg('Sugestão aprovada e jogo confirmado.', true);
   carregarJogos();
 }
 
@@ -647,7 +647,7 @@ async function guardarResultado(id){
   if(!valor){ showMsg('Escolhe um resultado.'); return; }
   const { error } = await sb.from('jogos').update({ resultado_estado: valor }).eq('id', id);
   if(error){ showMsg(error.message); return; }
-  showMsg('✓ Resultado do jogo guardado.', true);
+  showMsg('Resultado do jogo guardado.', true);
   carregarJogos();
 }
 
@@ -668,7 +668,7 @@ async function addMembro(){
     p_nome, p_senha, p_funcao: document.getElementById('m-funcao').value || null
   });
   if(error){ showMsg(error.message); return; }
-  showMsg(`✓ Membro "${p_nome}" adicionado com sucesso.`, true);
+  showMsg(`Membro "${p_nome}" adicionado com sucesso.`, true);
   document.getElementById('m-nome').value = '';
   document.getElementById('m-senha').value = '';
   document.getElementById('m-funcao').value = '';
