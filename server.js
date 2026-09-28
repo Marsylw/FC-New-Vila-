@@ -8,24 +8,29 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from root
+// Serve static files from root directory
 app.use(express.static(__dirname));
 
-// Route handlers for convenient URLs
-app.get('/', (req, res) => {
+// Direct friendly route handlers
+app.get(['/', '/index', '/index.html'], (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/admin', (req, res) => {
+app.get(['/admin', '/admin.html'], (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
-app.get('/perfil', (req, res) => {
+app.get(['/perfil', '/perfil.html'], (req, res) => {
   res.sendFile(path.join(__dirname, 'perfil.html'));
 });
 
-app.get('/publico', (req, res) => {
+app.get(['/publico', '/publico.html'], (req, res) => {
   res.sendFile(path.join(__dirname, 'publico.html'));
+});
+
+// Fallback to index.html
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {

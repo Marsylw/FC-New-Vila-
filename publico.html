@@ -8,11 +8,15 @@
 <meta property="og:title" content="FC New Vila">
 <meta property="og:description" content="Plataforma oficial do clube FC New Vila com gestão de jogos, plantel e perfil de atletas.">
 <link rel="icon" type="image/jpeg" href="/logo.jpg">
+<script src="/logo-data.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
-    --navy:#152a52; --navy-dark:#0e1d3a; --gold:#c9a227;
+    --navy:#152a52; --navy-dark:#0e1d3a; --gold:#c9a227; --gold-light:#e9c766;
     --bg:#f6f6f4; --card:#ffffff; --text:#1c1c1c; --muted:#6b7280; --border:#e4e2dc;
+    --green:#15803d; --green-bg:#dcfce7;
+    --red:#b91c1c; --red-bg:#fee2e2;
+    --amber:#b45309; --amber-bg:#fef3c7;
     box-sizing:border-box;
     padding-top:env(safe-area-inset-top,0px);
     padding-bottom:env(safe-area-inset-bottom,0px);
@@ -23,87 +27,221 @@
   :root[data-theme="dark"]{ --bg:#101418; --card:#181c22; --text:#eceef1; --muted:#9aa1ac; --border:#2a2f37; }
   *{box-sizing:border-box;}
   html,body{margin:0;height:100%;}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+  
   header{
-    background:var(--navy); color:#fff; display:flex; align-items:center; gap:10px;
+    background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:space-between;
     padding:10px 16px; padding-top:calc(10px + env(safe-area-inset-top,0px));
-    position:sticky; top:0; z-index:5;
+    position:sticky; top:0; z-index:20;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
   }
-  header img{width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,0.3);}
-  header h1{font-size:15px; font-weight:600; margin:0;}
-  header a.nav-link{color:#cfd6e4; font-size:12px; text-decoration:none; margin-left:12px;}
-  header a.nav-link:hover{color:#fff;}
-  nav{display:flex; gap:2px; background:var(--navy-dark); overflow-x:auto;}
-  nav button{background:transparent; border:none; color:#cfd6e4; padding:11px 14px; font-size:13px; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent;}
-  nav button.active{color:#fff; border-bottom:2px solid var(--gold);}
-  main{max-width:620px; margin:0 auto; padding:16px; padding-bottom:40px;}
-  .card{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px;}
-  .card h2{font-size:13px; margin:0 0 12px; padding-bottom:8px; border-bottom:2px solid var(--gold); text-transform:uppercase; letter-spacing:.03em; color:var(--muted);}
-  .stats{display:flex; gap:10px; flex-wrap:wrap;}
-  .stat{flex:1; min-width:130px; text-align:center; padding:14px 8px; border:1px solid var(--border); border-radius:8px;}
-  .stat b{display:block; font-size:22px; color:var(--navy);}
+  .header-left{display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff;}
+  .header-logo{width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); background:#fff; flex-shrink:0;}
+  .header-title b{font-size:15px; font-weight:700; letter-spacing:0.02em; display:block; line-height:1.2;}
+  .header-title span{font-size:11px; color:#cfd6e4;}
+  
+  .nav-links{display:flex; align-items:center; gap:8px;}
+  .nav-link{
+    color:#cfd6e4; font-size:12px; font-weight:600; text-decoration:none; padding:6px 10px; border-radius:6px;
+    transition:all 0.15s ease; display:inline-flex; align-items:center; gap:4px;
+  }
+  .nav-link:hover{color:#fff; background:rgba(255,255,255,0.1);}
+  .nav-link.active{color:#fff; background:rgba(255,255,255,0.15);}
+  .nav-link.highlight{
+    background:var(--gold); color:var(--navy-dark); font-weight:700;
+  }
+  .nav-link.highlight:hover{background:var(--gold-light); color:var(--navy-dark);}
+
+  /* Banner de Acesso Atleta */
+  .player-callout{
+    background:linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+    color:#fff; padding:12px 16px; display:flex; align-items:center; justify-content:space-between;
+    gap:12px; border-bottom:1px solid rgba(201,162,39,0.3);
+  }
+  .player-callout-text b{display:block; font-size:13px; color:var(--gold);}
+  .player-callout-text span{font-size:11px; color:#e2e8f0;}
+  .player-callout-btn{
+    background:var(--gold); color:var(--navy-dark); font-size:12px; font-weight:700;
+    padding:8px 14px; border-radius:6px; text-decoration:none; white-space:nowrap;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:transform 0.1s ease;
+  }
+  .player-callout-btn:active{transform:scale(0.97);}
+
+  /* Nav Tabs */
+  nav.main-tabs{display:flex; gap:2px; background:var(--navy-dark); overflow-x:auto;}
+  nav.main-tabs button{
+    background:transparent; border:none; color:#cfd6e4; padding:11px 16px; font-size:13px; font-weight:600;
+    cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; transition:all 0.15s ease;
+  }
+  nav.main-tabs button.active{color:#fff; border-bottom:2px solid var(--gold);}
+  nav.main-tabs button:hover{color:#fff;}
+
+  main{max-width:680px; margin:0 auto; padding:16px; padding-bottom:60px;}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+  .card h2{
+    font-size:13px; margin:0 0 14px; padding-bottom:8px; border-bottom:2px solid var(--gold);
+    text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:700;
+  }
+  
+  .stats{display:flex; gap:12px; flex-wrap:wrap;}
+  .stat{flex:1; min-width:140px; text-align:center; padding:14px 10px; border:1px solid var(--border); border-radius:10px; background:rgba(0,0,0,0.01);}
+  .stat b{display:block; font-size:24px; color:var(--navy); font-weight:800;}
   :root[data-theme="dark"] .stat b, @media (prefers-color-scheme:dark){ .stat b{color:var(--gold);} }
-  .stat span{font-size:11px; color:var(--muted);}
-  .proximo{display:flex; align-items:center; justify-content:space-between; gap:10px;}
-  .proximo .data{background:var(--navy); color:#fff; border-radius:8px; padding:8px 12px; text-align:center; min-width:56px;}
-  .proximo .data b{display:block; font-size:17px;}
-  .proximo .data span{font-size:10px; text-transform:uppercase;}
-  .proximo .info b{display:block; font-size:14px;}
-  .proximo .info span{font-size:12px; color:var(--muted);}
+  .stat span{font-size:12px; color:var(--muted);}
+
+  /* Card Próximo Jogo */
+  .proximo{display:flex; align-items:center; justify-content:space-between; gap:14px; background:rgba(21,42,82,0.03); border:1px solid var(--border); border-radius:10px; padding:12px 14px;}
+  .proximo .data{background:var(--navy); color:#fff; border-radius:8px; padding:10px 14px; text-align:center; min-width:62px; flex-shrink:0;}
+  .proximo .data b{display:block; font-size:20px; line-height:1;}
+  .proximo .data span{font-size:10px; text-transform:uppercase; color:var(--gold); font-weight:700;}
+  .proximo .info{flex:1;}
+  .proximo .info b{display:block; font-size:15px; color:var(--navy); margin-bottom:4px;}
+  :root[data-theme="dark"] .proximo .info b, @media (prefers-color-scheme:dark){ .proximo .info b{color:#fff;} }
+  .proximo .info span{font-size:12px; color:var(--muted); display:block;}
+  .rep-contact{display:inline-flex; align-items:center; gap:4px; font-size:11px; color:#1d4ed8; font-weight:600; text-decoration:none; margin-top:3px;}
+  .rep-contact:hover{text-decoration:underline;}
+
+  /* Jogos Cards / Lista */
+  .game-card{
+    border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:12px;
+    background:var(--card); transition:border-color 0.15s ease;
+  }
+  .game-card:hover{border-color:var(--gold);}
+  .game-card-header{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;}
+  .game-date{font-size:12px; font-weight:700; color:var(--navy);}
+  :root[data-theme="dark"] .game-date, @media (prefers-color-scheme:dark){ .game-date{color:var(--gold);} }
+  .game-teams{font-size:15px; font-weight:700; margin-bottom:6px; color:var(--text);}
+  .game-location{font-size:12px; color:var(--muted); margin-bottom:8px;}
+  
+  .game-score-box{
+    background:rgba(0,0,0,0.02); border:1px dashed var(--border); border-radius:8px; padding:10px; margin-top:8px;
+  }
+  .game-score-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .score-badge{font-size:17px; font-weight:800; color:var(--navy); padding:2px 8px; border-radius:6px; background:rgba(201,162,39,0.15);}
+  :root[data-theme="dark"] .score-badge, @media (prefers-color-scheme:dark){ .score-badge{color:var(--gold);} }
+  .scorers-line{font-size:12px; color:var(--text); margin-top:4px;}
+  .scorers-line b{color:var(--navy);}
+  :root[data-theme="dark"] .scorers-line b, @media (prefers-color-scheme:dark){ .scorers-line b{color:var(--gold-light);} }
+  .game-notes{font-size:11px; color:var(--muted); font-style:italic; margin-top:3px;}
+
+  /* Badges */
+  .badge{display:inline-block; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:700; text-transform:uppercase;}
+  .badge-vitoria{background:var(--green-bg); color:var(--green);}
+  .badge-derrota{background:var(--red-bg); color:var(--red);}
+  .badge-empate{background:var(--amber-bg); color:var(--amber);}
+  .badge-pendente{background:#e2e8f0; color:#475569;}
+
+  /* Tabela de Plantel */
   table{width:100%; border-collapse:collapse; font-size:13px;}
-  th,td{text-align:left; padding:7px 6px; border-bottom:1px solid var(--border);}
-  th{color:var(--muted); font-weight:600; font-size:11px; text-transform:uppercase;}
-  .jogador-cell{display:flex; align-items:center; gap:8px;}
-  .jogador-cell img{width:26px; height:26px; border-radius:50%; object-fit:cover; background:#eee;}
+  th,td{text-align:left; padding:8px 8px; border-bottom:1px solid var(--border);}
+  th{color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.03em;}
+  .jogador-cell{display:flex; align-items:center; gap:10px;}
+  .jogador-cell img{width:32px; height:32px; border-radius:50%; object-fit:cover; background:#f1f5f9; border:1px solid var(--border); flex-shrink:0;}
+  .jogador-cell .j-info b{display:block; font-size:13px; line-height:1.2;}
+  .jogador-cell .j-info span{font-size:11px; color:var(--muted);}
+  .camisola-badge{display:inline-block; font-weight:800; color:var(--navy); background:rgba(21,42,82,0.08); padding:2px 6px; border-radius:4px; font-size:12px;}
+  
+  .btn-enter-player{
+    color:var(--navy); font-size:11px; font-weight:700; text-decoration:none; padding:4px 8px;
+    border-radius:4px; background:rgba(201,162,39,0.18); border:1px solid var(--gold);
+    white-space:nowrap; transition:all 0.15s ease;
+  }
+  .btn-enter-player:hover{background:var(--gold); color:var(--navy-dark);}
+
   .tab{display:none;}
   .tab.active{display:block;}
-  .vazio{color:var(--muted); font-size:13px;}
+  .vazio{color:var(--muted); font-size:13px; text-align:center; padding:16px;}
 </style>
 </head>
 <body>
 
 <header>
-  <img src="logo.jpg" alt="FC New Vila" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%23152a52%22/><text x=%2216%22 y=%2220%22 font-size=%2210%22 fill=%22%23c9a227%22 text-anchor=%22middle%22>NV</text></svg>'">
-  <h1>FC New Vila</h1>
-  <div style="margin-left:auto; display:flex; align-items:center;">
-    <a href="perfil.html" class="nav-link">O meu perfil</a>
-    <a href="admin.html" class="nav-link">Painel</a>
+  <a href="publico.html" class="header-left">
+    <img src="/logo.jpg" alt="FC New Vila" class="header-logo" id="header-logo-img">
+    <div class="header-title">
+      <b>FC NEW VILA</b>
+      <span>Clube Oficial</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="publico.html" class="nav-link active">Início</a>
+    <a href="perfil.html" class="nav-link highlight">⚽ O meu perfil</a>
+    <a href="admin.html" class="nav-link">🔒 Painel</a>
   </div>
 </header>
-<nav id="nav">
-  <button data-tab="home" class="active">Início</button>
-  <button data-tab="jogos">Jogos</button>
+
+<!-- Chamada de Ação para Jogadores -->
+<div class="player-callout">
+  <div class="player-callout-text">
+    <b>És atleta do FC New Vila?</b>
+    <span>Acede ao teu perfil para veres o teu código, jogos e convocatórias.</span>
+  </div>
+  <a href="perfil.html" class="player-callout-btn">Aceder ao Perfil ➔</a>
+</div>
+
+<nav class="main-tabs" id="nav">
+  <button data-tab="home" class="active">Resumo</button>
+  <button data-tab="jogos">Jogos & Resultados</button>
   <button data-tab="plantel">Plantel</button>
 </nav>
+
 <main>
 
+  <!-- TAB HOME -->
   <section id="tab-home" class="tab active">
     <div class="card">
-      <h2>Resumo</h2>
+      <h2>Estatísticas do Clube</h2>
       <div class="stats">
-        <div class="stat"><b id="s-jogadores">—</b><span>jogadores</span></div>
+        <div class="stat"><b id="s-jogadores">—</b><span>atletas no plantel</span></div>
+        <div class="stat"><b id="s-jogos-total">—</b><span>jogos agendados</span></div>
         <div class="stat"><b id="s-pagos">—</b><span>já pagaram equipamento</span></div>
       </div>
     </div>
+
     <div class="card">
-      <h2>Próximo jogo</h2>
-      <div id="proximo-jogo-box"><div id="proximo-jogo" class="vazio">Sem jogos marcados.</div></div>
+      <h2>Próximo Jogo</h2>
+      <div id="proximo-jogo-box">
+        <div id="proximo-jogo" class="vazio">A carregar informações...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Último Resultado</h2>
+      <div id="ultimo-resultado-box">
+        <div class="vazio">Sem jogos concluídos registados.</div>
+      </div>
     </div>
   </section>
 
+  <!-- TAB JOGOS -->
   <section id="tab-jogos" class="tab">
     <div class="card">
-      <h2>Jogos marcados</h2>
-      <div class="tablewrap"><table><thead><tr><th>Data</th><th>Hora</th><th>Adversário</th><th>Local</th><th>Resultado</th></tr></thead>
-      <tbody id="jogos-tbody"><tr><td colspan="5" class="vazio">Sem jogos marcados.</td></tr></tbody></table></div>
+      <h2>Calendário & Resultados</h2>
+      <div id="jogos-lista">
+        <div class="vazio">A carregar jogos...</div>
+      </div>
     </div>
   </section>
 
+  <!-- TAB PLANTEL -->
   <section id="tab-plantel" class="tab">
     <div class="card">
-      <h2>Plantel</h2>
-      <div class="tablewrap"><table><thead><tr><th>Jogador</th><th>Posição</th><th>Nº</th></tr></thead>
-      <tbody id="plantel-tbody"><tr><td colspan="3" class="vazio">Sem jogadores.</td></tr></tbody></table></div>
+      <h2>Plantel Oficial</h2>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Atleta</th>
+              <th>Posição</th>
+              <th>Nº</th>
+              <th>Acesso</th>
+            </tr>
+          </thead>
+          <tbody id="plantel-tbody">
+            <tr><td colspan="4" class="vazio">A carregar atletas...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -112,66 +250,223 @@
 <script>
 const SUPABASE_URL = 'https://dnpomwkwpxagiecnqjpt.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DTbIm2GgS9iNBYqNTirpLA_8Wdin2ND';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const LOGO = '/logo.jpg';
+const LOGO = window.FCNV_LOGO || '/logo.jpg';
+document.getElementById('header-logo-img').src = LOGO;
+document.getElementById('header-logo-img').onerror = function(){ this.src = LOGO; };
 
-document.getElementById('nav').addEventListener('click', (e)=>{
+// Gestão de abas
+document.getElementById('nav').addEventListener('click', (e) => {
   const btn = e.target.closest('button[data-tab]');
   if(!btn) return;
-  document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(s => s.classList.remove('active'));
   document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
 });
 
-const MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+const RESULTADOS = { vitoria: 'Vitória', empate: 'Empate', derrota: 'Derrota' };
+
 function formatarData(iso){
+  if(!iso) return { dia: '—', mes: '—' };
   const [y,m,d] = iso.split('-');
-  return { dia: d, mes: MESES[parseInt(m,10)-1] };
+  return { dia: d, mes: MESES[parseInt(m,10)-1] || m };
+}
+
+// Extrai nome do adversário e contacto do representante
+function extrairAdversarioEContacto(str){
+  if(!str) return { nome: '—', contacto: null };
+  const match = str.match(/^(.*?)(?:\s*(?:·|\||-)?\s*(?:\[|\()?(?:Tel|Contacto|Rep)?:?\s*([+0-9\s-]{6,})(?:\]|\))?)$/i);
+  if(match && match[2]){
+    const limpo = match[1].replace(/[·|\[\(\]\)]+$/, '').trim();
+    return { nome: limpo || str, contacto: match[2].trim() };
+  }
+  return { nome: str, contacto: null };
+}
+
+// Analisa score, quem marcou e notas do resultado
+function parseDetalhesJogo(resultado, resultado_estado){
+  let placar = '';
+  let marcadores = '';
+  let resumo = '';
+
+  if(resultado){
+    const partes = resultado.split('|').map(s => s.trim());
+    placar = partes[0] || '';
+    for(let i = 1; i < partes.length; i++){
+      const p = partes[i];
+      if(p.toLowerCase().includes('golo') || p.toLowerCase().includes('marcador')){
+        marcadores = p;
+      } else if(!resumo){
+        resumo = p;
+      } else {
+        resumo += ' · ' + p;
+      }
+    }
+    if(!marcadores && placar.includes('(')){
+      const m = placar.match(/^(.*?)\s*\((.*?)\)$/);
+      if(m){
+        placar = m[1].trim();
+        marcadores = m[2].trim();
+      }
+    }
+  }
+
+  return {
+    estado: resultado_estado,
+    placar: placar || (resultado_estado ? RESULTADOS[resultado_estado] : ''),
+    marcadores: marcadores,
+    resumo: resumo
+  };
 }
 
 async function carregar(){
   const hoje = new Date().toISOString().slice(0,10);
 
-  // Jogadores + plantel
+  // 1. Jogadores
   const { data: jogadores } = await sb.from('jogadores').select('*').order('nome');
   if(jogadores){
     document.getElementById('s-jogadores').textContent = jogadores.length;
     if(jogadores.length){
-      document.getElementById('plantel-tbody').innerHTML = jogadores.map(j => `
-        <tr><td><div class="jogador-cell"><img src="${j.foto_url || LOGO}" onerror="this.src='${LOGO}'">${j.nome}</div></td>
-        <td>${j.posicao||'—'}</td><td>${j.numero_camisola||'—'}</td></tr>`
-      ).join('');
+      document.getElementById('plantel-tbody').innerHTML = jogadores.map(j => {
+        const foto = j.foto_url || LOGO;
+        return `
+          <tr>
+            <td>
+              <div class="jogador-cell">
+                <img src="${foto}" onerror="this.src='${LOGO}'" alt="${j.nome}">
+                <div class="j-info">
+                  <b>${j.nome}</b>
+                  <span>${j.posicao || 'Posição a definir'}</span>
+                </div>
+              </div>
+            </td>
+            <td>${j.posicao || '—'}</td>
+            <td><span class="camisola-badge">${j.numero_camisola ? '#' + j.numero_camisola : '—'}</span></td>
+            <td>
+              <a href="perfil.html?codigo=${encodeURIComponent(j.codigo_pessoal || '')}" class="btn-enter-player" title="Aceder com perfil deste atleta">
+                Entrar ➔
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
   }
 
-  // Pagamentos — quantos jogadores distintos já pagaram
+  // 2. Pagamentos
   const { data: pagamentos } = await sb.from('pagamentos').select('jogador_id');
   if(pagamentos){
-    const distintos = new Set(pagamentos.map(p=>p.jogador_id));
+    const distintos = new Set(pagamentos.map(p => p.jogador_id));
     document.getElementById('s-pagos').textContent = distintos.size;
   }
 
-  // Jogos (só os confirmados)
-  const RESULTADOS = { vitoria: 'Vitória', empate: 'Empate', derrota: 'Derrota' };
-  const { data: jogos } = await sb.from('jogos').select('*').eq('estado','confirmado').order('data_jogo');
-  if(jogos && jogos.length){
-    document.getElementById('jogos-tbody').innerHTML = jogos.map(j =>
-      `<tr><td>${j.data_jogo}</td><td>${j.hora ? j.hora.slice(0,5) : '—'}</td><td><b>vs ${j.adversario||'—'}</b></td><td>${j.local||'—'}</td><td>${j.resultado_estado ? RESULTADOS[j.resultado_estado] : '—'}</td></tr>`
-    ).join('');
+  // 3. Jogos Confirmados
+  const { data: jogos } = await sb.from('jogos').select('*').eq('estado','confirmado').order('data_jogo', { ascending: true });
+  if(jogos){
+    document.getElementById('s-jogos-total').textContent = jogos.length;
+    
+    if(jogos.length > 0){
+      // Renderiza lista detalhada de jogos
+      document.getElementById('jogos-lista').innerHTML = jogos.map(j => {
+        const f = formatarData(j.data_jogo);
+        const advInfo = extrairAdversarioEContacto(j.adversario);
+        const det = parseDetalhesJogo(j.resultado, j.resultado_estado);
+        const telLimpo = advInfo.contacto ? advInfo.contacto.replace(/\s+/g,'') : null;
 
-    const proximo = jogos.find(j => j.data_jogo >= hoje) || jogos[jogos.length-1];
-    if(proximo){
-      const f = formatarData(proximo.data_jogo);
-      const box = document.getElementById('proximo-jogo-box');
-      if(box){
-        box.innerHTML = `
+        let badgeClass = 'badge-pendente';
+        if(j.resultado_estado === 'vitoria') badgeClass = 'badge-vitoria';
+        else if(j.resultado_estado === 'derrota') badgeClass = 'badge-derrota';
+        else if(j.resultado_estado === 'empate') badgeClass = 'badge-empate';
+
+        return `
+          <div class="game-card">
+            <div class="game-card-header">
+              <span class="game-date">📅 ${f.dia} ${f.mes} ${j.hora ? '· ' + j.hora.slice(0,5) : ''}</span>
+              ${j.resultado_estado ? `<span class="badge ${badgeClass}">${RESULTADOS[j.resultado_estado]}</span>` : '<span class="badge badge-pendente">Agendado</span>'}
+            </div>
+            <div class="game-teams">
+              FC New Vila <span style="color:var(--gold); margin:0 4px;">vs</span> ${advInfo.nome}
+            </div>
+            ${advInfo.contacto ? `
+              <div style="margin-bottom:6px;">
+                <a href="tel:${telLimpo}" class="rep-contact" title="Ligar para representante">
+                  📞 Rep: ${advInfo.contacto}
+                </a>
+              </div>
+            ` : ''}
+            <div class="game-location">
+              📍 ${j.local || 'Local a definir'}
+            </div>
+
+            ${(det.placar || det.marcadores || det.resumo) ? `
+              <div class="game-score-box">
+                <div class="game-score-row">
+                  ${det.placar ? `<span class="score-badge">${det.placar}</span>` : ''}
+                  ${j.resultado_estado ? `<span style="font-size:12px; font-weight:700; color:var(--muted);">(${RESULTADOS[j.resultado_estado]})</span>` : ''}
+                </div>
+                ${det.marcadores ? `<div class="scorers-line">⚽ <b>Quem marcou:</b> ${det.marcadores.replace(/^golos:?/i,'').trim()}</div>` : ''}
+                ${det.resumo ? `<div class="game-notes">📝 ${det.resumo}</div>` : ''}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // Próximo jogo
+      const proximo = jogos.find(j => j.data_jogo >= hoje) || jogos[jogos.length-1];
+      if(proximo){
+        const f = formatarData(proximo.data_jogo);
+        const advInfo = extrairAdversarioEContacto(proximo.adversario);
+        const telLimpo = advInfo.contacto ? advInfo.contacto.replace(/\s+/g,'') : null;
+        document.getElementById('proximo-jogo-box').innerHTML = `
           <div class="proximo">
             <div class="data"><b>${f.dia}</b><span>${f.mes}</span></div>
-            <div class="info"><b>vs ${proximo.adversario||'—'}</b><span>${proximo.hora ? proximo.hora.slice(0,5) : ''} · ${proximo.local||'local a definir'}</span></div>
-          </div>`;
+            <div class="info">
+              <b>vs ${advInfo.nome}</b>
+              <span>${proximo.hora ? proximo.hora.slice(0,5) : 'Hora a definir'} · ${proximo.local || 'Campo a definir'}</span>
+              ${advInfo.contacto ? `<a href="tel:${telLimpo}" class="rep-contact">📞 Rep: ${advInfo.contacto}</a>` : ''}
+            </div>
+          </div>
+        `;
       }
+
+      // Último jogo disputado (com resultado)
+      const concluidos = jogos.filter(j => j.resultado_estado || j.resultado);
+      if(concluidos.length > 0){
+        const ultimo = concluidos[concluidos.length-1];
+        const f = formatarData(ultimo.data_jogo);
+        const advInfo = extrairAdversarioEContacto(ultimo.adversario);
+        const det = parseDetalhesJogo(ultimo.resultado, ultimo.resultado_estado);
+
+        let badgeClass = 'badge-pendente';
+        if(ultimo.resultado_estado === 'vitoria') badgeClass = 'badge-vitoria';
+        else if(ultimo.resultado_estado === 'derrota') badgeClass = 'badge-derrota';
+        else if(ultimo.resultado_estado === 'empate') badgeClass = 'badge-empate';
+
+        document.getElementById('ultimo-resultado-box').innerHTML = `
+          <div class="game-card" style="margin-bottom:0; background:rgba(0,0,0,0.01);">
+            <div class="game-card-header">
+              <span class="game-date">📅 ${f.dia} ${f.mes}</span>
+              <span class="badge ${badgeClass}">${RESULTADOS[ultimo.resultado_estado] || 'Resultado'}</span>
+            </div>
+            <div class="game-teams">
+              FC New Vila vs ${advInfo.nome}
+            </div>
+            <div class="game-score-box">
+              <div class="game-score-row">
+                <span class="score-badge">${det.placar || 'Jogo Disputado'}</span>
+              </div>
+              ${det.marcadores ? `<div class="scorers-line">⚽ <b>Quem marcou:</b> ${det.marcadores.replace(/^golos:?/i,'').trim()}</div>` : ''}
+              ${det.resumo ? `<div class="game-notes">📝 ${det.resumo}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+    } else {
+      document.getElementById('jogos-lista').innerHTML = '<div class="vazio">Nenhum jogo confirmado de momento.</div>';
     }
   }
 }

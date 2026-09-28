@@ -4,181 +4,217 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FC New Vila — O meu perfil</title>
-<meta name="description" content="Área de jogador do FC New Vila. Consulta os teus jogos, equipamentos, pagamentos e gere o teu código de acesso.">
+<meta name="description" content="Área de jogador do FC New Vila. Consulta os teus dados, jogos, pagamentos e gere o teu código de acesso.">
 <link rel="icon" type="image/jpeg" href="/logo.jpg">
+<script src="/logo-data.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
-    --navy:#152a52; --navy-dark:#0e1d3a; --gold:#c9a227; --gold-light:#f9f3db;
-    --bg:#f6f6f4; --card:#ffffff; --text:#1c1c1c; --muted:#6b7280;
-    --border:#e4e2dc; --danger:#b3261e; --success:#1e7a37; --success-bg:#e9f7ec;
+    --navy:#152a52; --navy-dark:#0e1d3a; --gold:#c9a227; --gold-light:#e9c766;
+    --bg:#f6f6f4; --card:#ffffff; --text:#1c1c1c; --muted:#6b7280; --border:#e4e2dc;
+    --green:#15803d; --green-bg:#dcfce7;
+    --red:#b91c1c; --red-bg:#fee2e2;
+    --amber:#b45309; --amber-bg:#fef3c7;
     box-sizing:border-box;
     padding-top:env(safe-area-inset-top,0px);
     padding-bottom:env(safe-area-inset-bottom,0px);
   }
   @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#101418; --card:#181c22; --text:#eceef1; --muted:#9aa1ac; --border:#2a2f37;
-      --gold-light:#242010; --success-bg:#122316;
-    }
+    :root:not([data-theme="light"]){ --bg:#101418; --card:#181c22; --text:#eceef1; --muted:#9aa1ac; --border:#2a2f37; }
   }
-  :root[data-theme="dark"]{
-    --bg:#101418; --card:#181c22; --text:#eceef1; --muted:#9aa1ac; --border:#2a2f37;
-    --gold-light:#242010; --success-bg:#122316;
-  }
+  :root[data-theme="dark"]{ --bg:#101418; --card:#181c22; --text:#eceef1; --muted:#9aa1ac; --border:#2a2f37; }
   *{box-sizing:border-box;}
   html,body{margin:0;height:100%;}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
-  
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+
   header{
-    background:var(--navy); color:#fff; display:flex; align-items:center; gap:10px;
+    background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:space-between;
     padding:10px 16px; padding-top:calc(10px + env(safe-area-inset-top,0px));
-    position:sticky; top:0; z-index:20; box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    position:sticky; top:0; z-index:20;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
   }
-  header img{width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,0.3);}
-  header h1{font-size:15px; font-weight:700; margin:0; flex:1; letter-spacing:0.02em;}
-  header a.nav-link{color:#cfd6e4; font-size:12px; text-decoration:none; padding:4px 8px; border-radius:4px; transition:color .2s;}
-  header a.nav-link:hover{color:#fff;}
-  header button.btn-sair{background:transparent; border:1px solid var(--gold); color:var(--gold); border-radius:6px; padding:5px 10px; font-size:12px; cursor:pointer; font-weight:600;}
-  header button.btn-sair:hover{background:var(--gold); color:#152a52;}
+  .header-brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff;}
+  .header-logo{width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); background:#fff; flex-shrink:0;}
+  .header-title b{font-size:15px; font-weight:700; letter-spacing:0.02em; display:block; line-height:1.2;}
+  .header-title span{font-size:11px; color:#cfd6e4;}
 
-  main{max-width:520px; margin:0 auto; padding:16px; padding-bottom:60px;}
-  .card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.03);}
-  .card h2{font-size:13px; margin:0 0 12px; padding-bottom:8px; border-bottom:2px solid var(--gold); text-transform:uppercase; letter-spacing:.04em; color:var(--muted); display:flex; justify-content:space-between; align-items:center;}
-  
-  label{display:block; font-size:12px; font-weight:600; color:var(--muted); margin:10px 0 4px;}
-  input, select{width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:7px; font-size:14px; background:var(--card); color:var(--text); transition:border-color .2s;}
-  input:focus, select:focus{outline:none; border-color:var(--navy); box-shadow:0 0 0 2px rgba(21,42,82,0.15);}
-  .input-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; text-align:center; font-weight:700; letter-spacing:2px;}
-  
-  .row{display:flex; gap:10px; flex-wrap:wrap;}
-  .row > div{flex:1; min-width:140px;}
+  .header-nav{display:flex; align-items:center; gap:8px;}
+  .nav-link{
+    color:#cfd6e4; font-size:12px; font-weight:600; text-decoration:none; padding:6px 10px; border-radius:6px;
+    transition:all 0.15s ease;
+  }
+  .nav-link:hover{color:#fff; background:rgba(255,255,255,0.1);}
+  .btn-sair{
+    background:rgba(255,255,255,0.15); border:none; color:#fff; font-size:12px; font-weight:600;
+    padding:6px 12px; border-radius:6px; cursor:pointer; transition:background 0.15s ease;
+  }
+  .btn-sair:hover{background:var(--red); color:#fff;}
 
-  .btn-group{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
-  .btn-group button{flex:1; min-width:130px;}
+  main{max-width:680px; margin:0 auto; padding:16px; padding-bottom:60px;}
 
+  /* TELA DE LOGIN */
+  #login-screen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:20px 16px; background:radial-gradient(circle at top, var(--navy) 0%, var(--navy-dark) 100%);
+  }
+  .login-card{
+    background:var(--card); border:1px solid var(--border); border-radius:14px;
+    padding:28px 22px; width:100%; max-width:380px; text-align:center;
+    box-shadow:0 8px 30px rgba(0,0,0,0.3);
+  }
+  .login-card img{width:76px; height:76px; border-radius:50%; object-fit:cover; border:3px solid var(--gold); margin-bottom:12px; background:#fff;}
+  .login-card h1{font-size:20px; font-weight:800; margin:0; color:var(--navy); letter-spacing:0.02em;}
+  :root[data-theme="dark"] .login-card h1, @media (prefers-color-scheme:dark){ .login-card h1{color:#fff;} }
+  .login-card p{font-size:13px; color:var(--muted); margin:4px 0 20px;}
+  .login-card label{display:block; font-size:12px; font-weight:700; text-transform:uppercase; color:var(--muted); margin-bottom:6px; text-align:left;}
+  .login-card input{
+    width:100%; padding:12px 14px; font-size:18px; border:2px solid var(--border);
+    border-radius:8px; background:transparent; color:inherit; text-align:center;
+    font-weight:700; letter-spacing:3px; outline:none; transition:border-color 0.15s ease;
+  }
+  .login-card input:focus{border-color:var(--navy);}
+  .login-card .small-note{font-size:11px; color:var(--muted); margin:8px 0 16px; text-align:left;}
+
+  /* CARD GERAL */
+  .card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+  .card h2{
+    font-size:13px; margin:0 0 14px; padding-bottom:8px; border-bottom:2px solid var(--gold);
+    text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:700;
+  }
+
+  /* PERFIL TOP */
+  .perfil-top{display:flex; align-items:center; gap:16px; margin-bottom:14px;}
+  .foto-wrap{position:relative; width:68px; height:68px; flex-shrink:0;}
+  .foto-wrap img{width:68px; height:68px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); background:#f1f5f9;}
+  .foto-btn{
+    position:absolute; bottom:0; right:0; background:var(--navy); color:#fff; border-radius:50%;
+    width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+    font-size:11px; cursor:pointer; border:1px solid #fff;
+  }
+  .foto-btn input{display:none;}
+  .perfil-info h2{font-size:18px; font-weight:800; margin:0 0 4px; border:none; padding:0; text-transform:none; color:inherit;}
+  .perfil-info p{margin:0; font-size:13px; color:var(--muted);}
+
+  /* BANNER CÓDIGO */
+  .codigo-banner{
+    background:rgba(201,162,39,0.12); border:1px solid var(--gold); border-radius:8px;
+    padding:10px 14px; display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .codigo-banner .label{font-size:11px; text-transform:uppercase; font-weight:700; color:var(--muted);}
+  .codigo-banner .valor{font-size:18px; font-weight:800; letter-spacing:2px; color:var(--navy); font-family:monospace;}
+  :root[data-theme="dark"] .codigo-banner .valor, @media (prefers-color-scheme:dark){ .codigo-banner .valor{color:var(--gold);} }
+  .btn-copy{
+    background:var(--navy); color:#fff; border:none; border-radius:6px; font-size:11px; font-weight:700;
+    padding:6px 10px; cursor:pointer; transition:background 0.15s ease;
+  }
+  .btn-copy:hover{background:var(--navy-dark);}
+
+  /* FORMULÁRIOS */
+  .form-group{margin-bottom:12px;}
+  .form-group label{display:block; font-size:12px; font-weight:700; color:var(--muted); margin-bottom:4px; text-transform:uppercase;}
+  .form-group input, .form-group select{
+    width:100%; padding:9px 12px; font-size:14px; border:1px solid var(--border);
+    border-radius:6px; background:transparent; color:inherit; outline:none;
+  }
+  .form-group input:focus, .form-group select:focus{border-color:var(--navy);}
+  .form-row{display:flex; gap:12px;}
+  .form-row > *{flex:1;}
+  @media (max-width:540px){ .form-row{flex-direction:column; gap:0;} }
+
+  /* BOTÕES */
   button.primary{
-    background:var(--navy); color:#fff; border:none; border-radius:7px; padding:11px 16px;
-    font-size:13px; font-weight:600; cursor:pointer; width:100%; margin-top:12px;
-    transition:background .2s, transform .1s; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    background:var(--navy); color:#fff; border:none; font-weight:700; font-size:13px;
+    padding:10px 16px; border-radius:6px; cursor:pointer; width:100%; transition:all 0.15s ease;
   }
   button.primary:hover{background:var(--navy-dark);}
-  button.primary:active{transform:scale(0.99);}
-  button.primary:disabled{opacity:0.6; cursor:not-allowed;}
-
   button.secondary{
-    background:transparent; color:var(--navy); border:1px solid var(--navy); border-radius:7px;
-    padding:10px 14px; font-size:13px; font-weight:600; cursor:pointer;
-    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    background:rgba(21,42,82,0.08); color:var(--navy); border:1px solid var(--border);
+    font-weight:700; font-size:12px; padding:8px 12px; border-radius:6px; cursor:pointer;
   }
-  button.secondary:hover{background:rgba(21,42,82,0.06);}
   :root[data-theme="dark"] button.secondary, @media (prefers-color-scheme:dark){
-    button.secondary{color:var(--gold); border-color:var(--gold);}
-    button.secondary:hover{background:rgba(201,162,39,0.1);}
+    button.secondary{background:rgba(255,255,255,0.08); color:#fff;}
   }
+  button.secondary:hover{background:rgba(201,162,39,0.2); border-color:var(--gold);}
+  button:disabled{opacity:0.6; cursor:not-allowed;}
 
-  /* Status message styles */
-  .msg-box{font-size:12px; margin-top:8px; min-height:16px; border-radius:6px; padding:0; transition:all .2s;}
-  .msg-box.ok{color:var(--success); background:var(--success-bg); padding:8px 10px; font-weight:500;}
-  .msg-box.err{color:var(--danger); background:#fdf2f2; padding:8px 10px; font-weight:500;}
-  .small-note{font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4;}
+  .msg-box{margin-top:10px; font-size:12px; border-radius:6px; padding:0; text-align:center;}
+  .msg-box.ok{color:var(--green); background:var(--green-bg); padding:8px; font-weight:600;}
+  .msg-box.err{color:var(--red); background:var(--red-bg); padding:8px; font-weight:600;}
 
-  /* Profile Card Top */
-  .perfil-top{display:flex; gap:16px; align-items:center;}
-  .foto-wrap{position:relative; width:76px; height:76px; flex-shrink:0;}
-  .foto-wrap img{width:76px; height:76px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); background:#eee;}
-  .foto-wrap input{display:none;}
-  .foto-btn{
-    position:absolute; bottom:-2px; right:-2px; background:var(--navy); color:#fff;
-    width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:13px; cursor:pointer; border:2px solid var(--card); box-shadow:0 1px 4px rgba(0,0,0,0.2);
-  }
-  .perfil-info h2{border:none; padding:0; margin:0; font-size:17px; text-transform:none; letter-spacing:0; color:var(--text); font-weight:700;}
-  .perfil-info p{margin:3px 0 0; font-size:12px; color:var(--muted);}
-
-  /* Banner do Código do Jogador */
-  .codigo-banner{
-    background:var(--gold-light); border:1px dashed var(--gold); border-radius:10px;
-    padding:12px 14px; margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;
-  }
-  .codigo-banner .label{font-size:11px; text-transform:uppercase; font-weight:700; color:var(--muted); letter-spacing:.03em;}
-  .codigo-banner .valor{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:19px; font-weight:800; color:var(--navy); letter-spacing:2px;}
-  :root[data-theme="dark"] .codigo-banner .valor, @media (prefers-color-scheme:dark){
-    .codigo-banner .valor{color:var(--gold);}
-  }
-  .btn-copy{
-    background:var(--card); border:1px solid var(--border); border-radius:6px;
-    padding:6px 10px; font-size:11px; font-weight:600; cursor:pointer; color:var(--text);
-  }
-  .btn-copy:hover{background:var(--navy); color:#fff; border-color:var(--navy);}
-
-  /* Tables */
+  /* TABELAS */
   .tablewrap{overflow-x:auto;}
   table{width:100%; border-collapse:collapse; font-size:13px;}
-  th,td{text-align:left; padding:8px 6px; border-bottom:1px solid var(--border);}
-  th{color:var(--muted); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.02em;}
-  .vazio{color:var(--muted); font-size:13px; padding:12px 6px; text-align:center;}
-  .total{font-size:13px; margin-top:10px; text-align:right; color:var(--muted);}
-  .total b{color:var(--text); font-size:15px;}
+  th,td{text-align:left; padding:8px 8px; border-bottom:1px solid var(--border); vertical-align:middle;}
+  th{color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.03em;}
 
-  /* Badges */
-  .badge{display:inline-block; padding:3px 8px; border-radius:20px; font-size:11px; font-weight:600;}
-  .badge.pedido{background:#eee; color:#666;}
-  .badge.pago{background:#fff3cd; color:#8a6d00;}
-  .badge.entregue{background:#d7f0dd; color:#1e7a37;}
-  .badge.pendente{background:#fff3cd; color:#8a6d00;}
-  .badge.confirmado{background:#d7f0dd; color:#1e7a37;}
+  .badge{display:inline-block; padding:3px 8px; border-radius:12px; font-size:10px; font-weight:700; text-transform:uppercase;}
+  .badge-vitoria{background:var(--green-bg); color:var(--green);}
+  .badge-derrota{background:var(--red-bg); color:var(--red);}
+  .badge-empate{background:var(--amber-bg); color:var(--amber);}
+  .badge-pendente{background:#e2e8f0; color:#475569;}
+  .badge-confirmado{background:#dbeafe; color:#1d4ed8;}
 
-  /* Login Card */
-  #login-screen{display:flex; align-items:center; justify-content:center; min-height:80vh; padding:20px;}
-  .login-card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:28px; width:100%; max-width:340px; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,0.06);}
-  .login-card img{width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:10px; border:2px solid var(--gold);}
-  .login-card h1{font-size:18px; margin:0 0 4px; font-weight:700;}
-  .login-card p{font-size:13px; color:var(--muted); margin:0 0 16px;}
+  .rep-contact{display:inline-flex; align-items:center; gap:4px; font-size:11px; color:#1d4ed8; font-weight:600; text-decoration:none;}
+  .rep-contact:hover{text-decoration:underline;}
 
-  #global-err{display:none; position:fixed; bottom:0; left:0; right:0; background:#b3261e; color:#fff; font-size:12px; padding:10px 14px; padding-bottom:calc(10px + env(safe-area-inset-bottom,0px)); z-index:100; text-align:center;}
+  .score-line{font-size:13px; font-weight:800; color:var(--navy); display:block;}
+  :root[data-theme="dark"] .score-line, @media (prefers-color-scheme:dark){ .score-line{color:var(--gold);} }
+  .scorers-line{font-size:11px; color:var(--muted); display:block; margin-top:2px;}
+
+  .vazio{color:var(--muted); font-size:13px; text-align:center; padding:16px;}
   .hidden{display:none !important;}
 </style>
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
+<!-- TELA DE LOGIN DO ATLETA -->
 <div id="login-screen">
   <div class="login-card">
-    <img src="/logo.jpg" alt="FC New Vila" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22><circle cx=%2240%22 cy=%2240%22 r=%2240%22 fill=%22%23152a52%22/><text x=%2240%22 y=%2246%22 font-size=%2222%22 fill=%22%23c9a227%22 text-anchor=%22middle%22 font-weight=%22bold%22>NV</text></svg>'">
-    <h1>FC New Vila</h1>
-    <p>Área do Atleta</p>
-    <label style="text-align:left;">O teu código de acesso</label>
-    <input id="login-codigo" class="input-mono" maxlength="8" placeholder="ex: Hzmm" autofocus autocomplete="off">
-    <p class="small-note">Código pessoal (menos de 8 caracteres)</p>
+    <img src="/logo.jpg" alt="FC New Vila" id="login-logo-img">
+    <h1>FC NEW VILA</h1>
+    <p>Área Oficial do Atleta</p>
+
+    <label for="login-codigo">O teu código de acesso</label>
+    <input id="login-codigo" maxlength="8" placeholder="ex: marsylw" autofocus autocomplete="off">
+    <p class="small-note">Introduz o teu código (menos de 8 caracteres)</p>
+
     <button class="primary" id="btn-login" onclick="fazerLogin()">
       <span>Entrar no Perfil</span>
     </button>
     <div id="login-msg" class="msg-box"></div>
-    <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border); display:flex; justify-content:space-between;">
-      <a href="/" style="font-size:12px; color:var(--muted); text-decoration:none;">← Site do Clube</a>
-      <a href="/admin" style="font-size:12px; color:var(--muted); text-decoration:none;">Painel Admin →</a>
+
+    <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between;">
+      <a href="publico.html" style="font-size:12px; color:var(--muted); text-decoration:none;">← Site Público</a>
+      <a href="admin.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Painel Admin →</a>
     </div>
   </div>
 </div>
 
-<!-- APLICAÇÃO DO PERFIL -->
+<!-- APLICAÇÃO DO PERFIL DO ATLETA -->
 <div id="app" class="hidden">
   <header>
-    <img src="/logo.jpg" alt="FC New Vila" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%23152a52%22/><text x=%2216%22 y=%2220%22 font-size=%2210%22 fill=%22%23c9a227%22 text-anchor=%22middle%22>NV</text></svg>'">
-    <h1>FC New Vila</h1>
-    <a href="/" class="nav-link">Início</a>
-    <a href="admin" class="nav-link">Painel</a>
-    <button class="btn-sair" onclick="sair()">Sair</button>
+    <a href="publico.html" class="header-brand">
+      <img src="/logo.jpg" alt="FC New Vila" class="header-logo" id="app-logo-img">
+      <div class="header-title">
+        <b>FC NEW VILA</b>
+        <span>Perfil do Atleta</span>
+      </div>
+    </a>
+    <div class="header-nav">
+      <a href="publico.html" class="nav-link">🏠 Site</a>
+      <a href="admin.html" class="nav-link">🔒 Painel</a>
+      <button class="btn-sair" onclick="sair()">🚪 Sair</button>
+    </div>
   </header>
 
   <main>
-    <!-- CARD DO PERFIL -->
+    <!-- CARD DO PERFIL DO ATLETA -->
     <div class="card">
       <div class="perfil-top">
         <div class="foto-wrap">
           <img id="foto-img" src="/logo.jpg" alt="Foto">
-          <label class="foto-btn" title="Mudar foto">
+          <label class="foto-btn" title="Alterar foto de perfil">
             📷
             <input type="file" accept="image/*" onchange="enviarFoto(event)">
           </label>
@@ -186,12 +222,12 @@
         <div class="perfil-info">
           <h2 id="p-nome">—</h2>
           <p id="p-posicao">—</p>
-          <p id="p-contacto" style="font-size:11px;"></p>
+          <p id="p-contacto"></p>
         </div>
       </div>
-      <div id="foto-msg" class="small-note"></div>
+      <div id="foto-msg" class="msg-box"></div>
 
-      <!-- BANNER COM O CÓDIGO ATUAL -->
+      <!-- BANNER COM O CÓDIGO PESSOAL ATUAL -->
       <div class="codigo-banner">
         <div>
           <div class="label">O teu código de acesso</div>
@@ -201,143 +237,183 @@
       </div>
     </div>
 
-    <!-- CARD SUGERIR JOGO -->
+    <!-- DEFINIÇÕES: EDITAR NOME E GERIR CÓDIGO PESSOAL -->
     <div class="card">
-      <h2>Sugerir um jogo</h2>
-      <p class="small-note" style="margin:0 0 10px;">Propõe um jogo amigável ou treino para a equipa. Fica pendente até a direção confirmar.</p>
+      <h2>As Minhas Definições</h2>
       
-      <div class="row">
-        <div>
-          <label for="s-data">Data do jogo *</label>
+      <!-- Alterar Nome -->
+      <div class="form-group">
+        <label for="def-nome">Nome de Apresentação</label>
+        <div style="display:flex; gap:8px;">
+          <input id="def-nome" placeholder="O teu nome ou alcunha" style="flex:1;">
+          <button class="secondary" id="btn-guardar-nome" onclick="mudarNome()" style="white-space:nowrap;">
+            Guardar nome
+          </button>
+        </div>
+        <div id="nome-msg" class="msg-box"></div>
+      </div>
+
+      <!-- Gerir Código de Acesso (< 8 caracteres) -->
+      <div class="form-group" style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border);">
+        <label for="def-codigo">Código Pessoal de Acesso (máx. 7 caracteres)</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input id="def-codigo" maxlength="7" placeholder="ex: gol88" style="flex:1; min-width:140px; font-family:monospace; font-weight:700;">
+          <button class="secondary" type="button" onclick="gerarNovoCodigo()" title="Gera um código aleatório">
+            🎲 Gerar novo
+          </button>
+          <button class="secondary" id="btn-guardar-codigo" onclick="guardarCodigo()" style="white-space:nowrap; background:var(--navy); color:#fff;">
+            Guardar código
+          </button>
+        </div>
+        <small style="display:block; font-size:11px; color:var(--muted); margin-top:4px;">
+          Podes definir o teu próprio código personalizado com menos de 8 caracteres (1 a 7 caracteres alfanuméricos).
+        </small>
+        <div id="codigo-msg" class="msg-box"></div>
+      </div>
+    </div>
+
+    <!-- SUGERIR NOVO JOGO -->
+    <div class="card">
+      <h2>Sugerir Novo Jogo</h2>
+      <p style="font-size:12px; color:var(--muted); margin:0 0 12px;">
+        Conheces uma equipa adversária disponível? Preenche os detalhes para a direção aprovar o jogo.
+      </p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="s-data">Data pretendida *</label>
           <input id="s-data" type="date">
         </div>
-        <div>
-          <label for="s-hora">Hora prevista</label>
+        <div class="form-group">
+          <label for="s-hora">Hora pretendida</label>
           <input id="s-hora" type="time">
         </div>
       </div>
 
-      <div class="row">
-        <div>
-          <label for="s-adversario">Adversário *</label>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="s-adversario">Equipa Adversária *</label>
           <input id="s-adversario" placeholder="ex: Sporting de Luanda">
         </div>
-        <div>
-          <label for="s-local">Local / Campo</label>
-          <input id="s-local" placeholder="ex: Campo da Vila">
+        <div class="form-group">
+          <label for="s-rep-contacto">Telefone do Representante da outra equipa</label>
+          <input id="s-rep-contacto" type="tel" placeholder="ex: 923 456 789">
         </div>
       </div>
 
+      <div class="form-group">
+        <label for="s-local">Local / Campo proposto</label>
+        <input id="s-local" placeholder="ex: Campo da Vila">
+      </div>
+
       <button class="primary" id="btn-sugerir" onclick="sugerirJogo()">
-        <span>Sugerir jogo</span>
+        <span>⚽ Sugerir jogo à Direção</span>
       </button>
       <div id="sugerir-msg" class="msg-box"></div>
     </div>
 
-    <!-- CARD JOGOS -->
+    <!-- HISTÓRICO DE JOGOS E SUGESTÕES -->
     <div class="card">
       <h2>Jogos & Sugestões</h2>
       <div class="tablewrap">
         <table>
           <thead>
-            <tr><th>Data</th><th>Hora</th><th>Adversário</th><th>Local</th><th>Estado / Resultado</th></tr>
+            <tr>
+              <th>Data</th>
+              <th>Hora</th>
+              <th>Adversário / Representante</th>
+              <th>Local</th>
+              <th>Estado / Placar</th>
+            </tr>
           </thead>
           <tbody id="jogos-tbody">
-            <tr><td colspan="5" class="vazio">Sem jogos marcados.</td></tr>
+            <tr><td colspan="5" class="vazio">Sem jogos registados.</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- CARD EQUIPAMENTO -->
+    <!-- EQUIPAMENTO -->
     <div class="card">
       <h2>Equipamento</h2>
       <div class="tablewrap">
         <table>
           <thead>
-            <tr><th>Tamanho</th><th>Nº</th><th>Estado</th></tr>
+            <tr><th>Tamanho</th><th>Nº Camisola</th><th>Estado</th></tr>
           </thead>
           <tbody id="equip-tbody">
-            <tr><td colspan="3" class="vazio">Ainda sem equipamento registado.</td></tr>
+            <tr><td colspan="3" class="vazio">A carregar equipamento...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- CARD PAGAMENTOS -->
+    <!-- PAGAMENTOS -->
     <div class="card">
-      <h2>Pagamentos</h2>
+      <h2>Pagamentos do Equipamento</h2>
       <div class="tablewrap">
         <table>
           <thead>
             <tr><th>Data</th><th>Valor</th></tr>
           </thead>
           <tbody id="pag-tbody">
-            <tr><td colspan="2" class="vazio">Ainda sem registo de pagamentos.</td></tr>
+            <tr><td colspan="2" class="vazio">A carregar pagamentos...</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="total">Total pago: <b id="pag-total">0 Kz</b></div>
-    </div>
-
-    <!-- CARD DEFINIÇÕES & CÓDIGO PESSOAL -->
-    <div class="card">
-      <h2>Definições de Perfil</h2>
-      
-      <!-- Alterar Nome -->
-      <label for="def-nome">Nome de jogador</label>
-      <input id="def-nome" style="text-align:left; letter-spacing:normal;">
-      <button class="primary" id="btn-guardar-nome" onclick="mudarNome()">
-        <span>Guardar nome</span>
-      </button>
-      <div id="nome-msg" class="msg-box"></div>
-
-      <!-- Alterar ou Gerar Código -->
-      <label style="margin-top:20px;" for="def-codigo">
-        Código de Acesso pessoal (<span style="color:var(--gold); font-weight:700;">menos de 8 caracteres</span>)
-      </label>
-      <p class="small-note" style="margin-top:0;">
-        Podes escrever o teu próprio código de 1 a 7 caracteres (letras e/ou números) ou clicar em <b>Gerar novo código</b>.
-      </p>
-      
-      <input id="def-codigo" class="input-mono" maxlength="7" placeholder="1 a 7 caracteres" oninput="atualizarContadorCodigo()">
-      <div id="codigo-len-hint" class="small-note" style="text-align:right;">0 / 7 caracteres</div>
-
-      <div class="btn-group">
-        <button class="secondary" type="button" id="btn-gerar-codigo" onclick="gerarNovoCodigo()">
-          <span> Gerar novo código</span>
-        </button>
-        <button class="primary" type="button" id="btn-guardar-codigo" style="margin-top:0;" onclick="guardarCodigo()">
-          <span> Guardar código</span>
-        </button>
+      <div style="margin-top:12px; text-align:right; font-size:13px;">
+        Total pago: <b id="pag-total" style="color:var(--navy); font-size:15px;">0 Kz</b>
       </div>
-      <div id="codigo-msg" class="msg-box"></div>
     </div>
+
   </main>
 </div>
-
-<div id="global-err"></div>
 
 <script>
 const SUPABASE_URL = 'https://dnpomwkwpxagiecnqjpt.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DTbIm2GgS9iNBYqNTirpLA_8Wdin2ND';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const LOGO = window.FCNV_LOGO || '/logo.jpg';
+document.getElementById('login-logo-img').src = LOGO;
+document.getElementById('login-logo-img').onerror = function(){ this.src = LOGO; };
+document.getElementById('app-logo-img').src = LOGO;
+document.getElementById('app-logo-img').onerror = function(){ this.src = LOGO; };
+
 let jogador = null;
-const LOGO_PLACEHOLDER = '/logo.jpg';
 
-// Atualiza contador de caracteres do código
-function atualizarContadorCodigo(){
-  const input = document.getElementById('def-codigo');
-  const len = input.value.trim().length;
-  const hint = document.getElementById('codigo-len-hint');
-  if(hint){
-    hint.textContent = `${len} / 7 caracteres (menos de 8)`;
-    hint.style.color = len > 7 ? 'var(--danger)' : 'var(--muted)';
+// Extrai nome do adversário e telefone do representante
+function extrairAdversarioEContacto(str){
+  if(!str) return { nome: '—', contacto: null };
+  const match = str.match(/^(.*?)(?:\s*(?:·|\||-)?\s*(?:\[|\()?(?:Tel|Contacto|Rep)?:?\s*([+0-9\s-]{6,})(?:\]|\))?)$/i);
+  if(match && match[2]){
+    const limpo = match[1].replace(/[·|\[\(\]\)]+$/, '').trim();
+    return { nome: limpo || str, contacto: match[2].trim() };
   }
+  return { nome: str, contacto: null };
 }
 
-// Login
+// Analisa score e golos
+function parseDetalhesJogo(resultado, resultado_estado){
+  let placar = '';
+  let marcadores = '';
+  if(resultado){
+    const partes = resultado.split('|').map(s => s.trim());
+    placar = partes[0] || '';
+    for(let i = 1; i < partes.length; i++){
+      if(partes[i].toLowerCase().includes('golo') || partes[i].toLowerCase().includes('marcador')){
+        marcadores = partes[i];
+      }
+    }
+    if(!marcadores && placar.includes('(')){
+      const m = placar.match(/^(.*?)\s*\((.*?)\)$/);
+      if(m){ placar = m[1].trim(); marcadores = m[2].trim(); }
+    }
+  }
+  return { placar, marcadores };
+}
+
+// ---- LOGIN DO ATLETA ----
 async function fazerLogin(){
   const input = document.getElementById('login-codigo');
   const codigo = input.value.trim();
@@ -352,7 +428,7 @@ async function fazerLogin(){
     return;
   }
   if(codigo.length > 8){
-    msg.textContent = 'O código tem menos de 8 caracteres.';
+    msg.textContent = 'O código deve ter menos de 8 caracteres.';
     msg.className = 'msg-box err';
     return;
   }
@@ -373,10 +449,10 @@ async function fazerLogin(){
         }
       }
     }catch(e){
-      console.warn('RPC login falhou, a tentar consulta direta:', e);
+      console.warn('RPC fallthrough:', e);
     }
 
-    // 2. Fallback case-insensitive direto na tabela
+    // 2. Fallback case-insensitive direto na tabela jogadores
     if(!usuario){
       const { data: directData, error: directErr } = await sb.from('jogadores')
         .select('*')
@@ -391,8 +467,6 @@ async function fazerLogin(){
     if(!usuario || !usuario.id){
       msg.textContent = 'Código incorreto ou jogador não encontrado.';
       msg.className = 'msg-box err';
-      btn.disabled = false;
-      btn.innerHTML = '<span>Entrar no Perfil</span>';
       return;
     }
 
@@ -400,7 +474,7 @@ async function fazerLogin(){
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
     entrarNaApp();
   }catch(err){
-    msg.textContent = 'Erro de ligação: ' + (err.message || err);
+    msg.textContent = 'Erro ao verificar código: ' + (err.message || err);
     msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
@@ -418,20 +492,15 @@ function sair(){
   document.getElementById('login-msg').className = 'msg-box';
 }
 
-async function entrarNaApp(){
-  if(!jogador || !jogador.id) return;
+function entrarNaApp(){
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
-
-  // Atualiza dados na tela
   atualizarDadosPerfil();
 
-  // Carrega listas
   carregarEquipamento();
   carregarPagamentos();
   carregarJogos();
 
-  // Define data mínima como hoje no form de sugestão
   try{
     const hoje = new Date().toISOString().slice(0,10);
     const dateInput = document.getElementById('s-data');
@@ -441,18 +510,20 @@ async function entrarNaApp(){
     }
   }catch(e){}
 
-  // Sincroniza em segundo plano com a versão mais recente da BD
   sincronizarJogador();
 }
 
 function atualizarDadosPerfil(){
-  document.getElementById('p-nome').textContent = jogador.nome || 'Jogador';
-  document.getElementById('p-posicao').textContent = (jogador.posicao||'Posição a definir') + (jogador.numero_camisola ? ' · Camisola nº ' + jogador.numero_camisola : '');
+  document.getElementById('p-nome').textContent = jogador.nome || 'Atleta';
+  document.getElementById('p-posicao').textContent = (jogador.posicao || 'Posição a definir') + (jogador.numero_camisola ? ' · Camisola nº ' + jogador.numero_camisola : '');
   const contactoEl = document.getElementById('p-contacto');
-  if(contactoEl) contactoEl.textContent = jogador.contacto ? 'Tel: ' + jogador.contacto : '';
+  if(contactoEl) contactoEl.textContent = jogador.contacto ? '📞 ' + jogador.contacto : '';
   
   const fotoEl = document.getElementById('foto-img');
-  if(fotoEl) fotoEl.src = jogador.foto_url || LOGO_PLACEHOLDER;
+  if(fotoEl){
+    fotoEl.src = jogador.foto_url || LOGO;
+    fotoEl.onerror = function(){ this.src = LOGO; };
+  }
   
   const badgeCodigo = document.getElementById('p-codigo-badge');
   if(badgeCodigo) badgeCodigo.textContent = jogador.codigo_pessoal || '—';
@@ -461,10 +532,7 @@ function atualizarDadosPerfil(){
   if(defNome) defNome.value = jogador.nome || '';
 
   const defCodigo = document.getElementById('def-codigo');
-  if(defCodigo){
-    defCodigo.value = jogador.codigo_pessoal || '';
-    atualizarContadorCodigo();
-  }
+  if(defCodigo) defCodigo.value = jogador.codigo_pessoal || '';
 }
 
 async function sincronizarJogador(){
@@ -481,17 +549,17 @@ async function sincronizarJogador(){
 
 function copiarCodigoBadge(){
   if(!jogador || !jogador.codigo_pessoal) return;
-  navigator.clipboard.writeText(jogador.codigo_pessoal).then(()=>{
+  navigator.clipboard.writeText(jogador.codigo_pessoal).then(() => {
     const btn = document.querySelector('.btn-copy');
     if(btn){
       const original = btn.textContent;
-      btn.textContent = 'Copiado!';
+      btn.textContent = '✓ Copiado!';
       setTimeout(()=>{ btn.textContent = original; }, 2000);
     }
   }).catch(()=>{});
 }
 
-// ---- SUGERIR JOGO ----
+// ---- SUGERIR JOGO (com telefone do representante da outra equipa) ----
 async function sugerirJogo(){
   const msg = document.getElementById('sugerir-msg');
   const btn = document.getElementById('btn-sugerir');
@@ -506,7 +574,8 @@ async function sugerirJogo(){
 
   const data_jogo = document.getElementById('s-data').value;
   const hora = document.getElementById('s-hora').value;
-  const adversario = document.getElementById('s-adversario').value.trim();
+  const adversarioNome = document.getElementById('s-adversario').value.trim();
+  const repContacto = document.getElementById('s-rep-contacto').value.trim();
   const local = document.getElementById('s-local').value.trim();
 
   if(!data_jogo){
@@ -514,11 +583,14 @@ async function sugerirJogo(){
     msg.className = 'msg-box err';
     return;
   }
-  if(!adversario){
-    msg.textContent = 'Indica o nome do adversário proposto.';
+  if(!adversarioNome){
+    msg.textContent = 'Indica o nome da equipa adversária.';
     msg.className = 'msg-box err';
     return;
   }
+
+  // Se houver contacto do representante, guarda estruturado no campo adversario
+  const adversarioCompleto = repContacto ? `${adversarioNome} · Rep: ${repContacto}` : adversarioNome;
 
   btn.disabled = true;
   btn.innerHTML = '<span>A enviar sugestão...</span>';
@@ -527,34 +599,41 @@ async function sugerirJogo(){
     const { data, error } = await sb.from('jogos').insert({
       data_jogo,
       hora: hora || null,
-      adversario: adversario || null,
+      adversario: adversarioCompleto,
       local: local || null,
       estado: 'pendente',
       sugerido_por_jogador_id: jogador.id
     }).select();
 
     if(error){
-      msg.textContent = 'Erro ao registar sugestão: ' + error.message;
+      if(error.code === '23505'){
+        msg.textContent = 'Já existe um jogo marcado ou sugerido para essa data.';
+      } else {
+        msg.textContent = 'Erro ao registar sugestão: ' + error.message;
+      }
       msg.className = 'msg-box err';
       return;
     }
 
-    msg.textContent = 'Sugestão enviada com sucesso! A organização irá analisar.';
+    msg.textContent = '✓ Sugestão enviada com sucesso! A direção irá analisar.';
     msg.className = 'msg-box ok';
+
     document.getElementById('s-adversario').value = '';
+    document.getElementById('s-rep-contacto').value = '';
     document.getElementById('s-local').value = '';
 
     carregarJogos();
-    setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className='msg-box'; }, 4000);
-  }catch(e){
-    mostrarErroGlobal(e);
+    setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className = 'msg-box'; }, 4000);
+  }catch(err){
+    msg.textContent = 'Erro de comunicação: ' + (err.message || err);
+    msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
-    btn.innerHTML = '<span>Sugerir jogo</span>';
+    btn.innerHTML = '<span>⚽ Sugerir jogo à Direção</span>';
   }
 }
 
-// ---- GUARDAR NOME ----
+// ---- ALTERAR NOME ----
 async function mudarNome(){
   const msg = document.getElementById('nome-msg');
   const btn = document.getElementById('btn-guardar-nome');
@@ -589,20 +668,20 @@ async function mudarNome(){
     document.getElementById('p-nome').textContent = novoNome;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    msg.textContent = 'Nome atualizado com sucesso!';
+    msg.textContent = '✓ Nome atualizado com sucesso!';
     msg.className = 'msg-box ok';
     setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className='msg-box'; }, 3500);
   }catch(e){
-    mostrarErroGlobal(e);
+    msg.textContent = 'Erro: ' + (e.message || e);
+    msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
     btn.innerHTML = '<span>Guardar nome</span>';
   }
 }
 
-// ---- GERAR NOVO CÓDIGO ----
+// ---- GERAR NOVO CÓDIGO ALEATÓRIO (< 8 caracteres) ----
 function gerarStringCodigo(){
-  // Gera um código alfanumérico amigável de 4 a 5 caracteres (menos de 8 caracteres)
   const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
   let cod = '';
   for(let i = 0; i < 4; i++){
@@ -619,13 +698,12 @@ function gerarNovoCodigo(){
 
   const novo = gerarStringCodigo();
   input.value = novo;
-  atualizarContadorCodigo();
 
   msg.textContent = `Código gerado: "${novo}". Clica em "Guardar código" para confirmar.`;
   msg.className = 'msg-box ok';
 }
 
-// ---- GUARDAR CÓDIGO (personalizado com menos de 8 caracteres) ----
+// ---- GUARDAR CÓDIGO (personalizado ou gerado, < 8 caracteres) ----
 async function guardarCodigo(){
   const msg = document.getElementById('codigo-msg');
   const btn = document.getElementById('btn-guardar-codigo');
@@ -654,16 +732,16 @@ async function guardarCodigo(){
   }
 
   if(!/^[A-Za-z0-9]{1,7}$/.test(novoCodigo)){
-    msg.textContent = 'O código só pode conter letras e/ou números, sem espaços nem símbolos.';
+    msg.textContent = 'O código só pode conter letras e/ou números (sem espaços nem símbolos).';
     msg.className = 'msg-box err';
     return;
   }
 
   btn.disabled = true;
-  btn.innerHTML = '<span>A verificar...</span>';
+  btn.innerHTML = '<span>A guardar...</span>';
 
   try{
-    // Verifica se outro jogador já usa o código
+    // Verifica se outro atleta já tem este código
     const { data: existentes, error: checkErr } = await sb.from('jogadores')
       .select('id')
       .eq('codigo_pessoal', novoCodigo)
@@ -676,7 +754,7 @@ async function guardarCodigo(){
     }
 
     if(existentes && existentes.length > 0){
-      msg.textContent = 'Esse código já está atribuído a outro atleta. Escolhe outro.';
+      msg.textContent = 'Esse código já está atribuído a outro atleta. Escolhe outro diferente.';
       msg.className = 'msg-box err';
       return;
     }
@@ -687,21 +765,21 @@ async function guardarCodigo(){
       .eq('id', jogador.id);
 
     if(updErr){
-      msg.textContent = 'Erro ao atualizar: ' + updErr.message;
+      msg.textContent = 'Erro ao atualizar na base de dados: ' + updErr.message;
       msg.className = 'msg-box err';
       return;
     }
 
     jogador.codigo_pessoal = novoCodigo;
+    document.getElementById('p-codigo-badge').textContent = novoCodigo;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    const badge = document.getElementById('p-codigo-badge');
-    if(badge) badge.textContent = novoCodigo;
-
-    msg.textContent = `Código atualizado com sucesso para "${novoCodigo}"! Usa-o para entrar da próxima vez.`;
+    msg.textContent = `✓ Novo código "${novoCodigo}" guardado com sucesso! Já o podes usar para entrar.`;
     msg.className = 'msg-box ok';
+    setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className='msg-box'; }, 5000);
   }catch(e){
-    mostrarErroGlobal(e);
+    msg.textContent = 'Erro: ' + (e.message || e);
+    msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
     btn.innerHTML = '<span>Guardar código</span>';
@@ -709,50 +787,58 @@ async function guardarCodigo(){
 }
 
 // ---- FOTO DE PERFIL ----
-async function enviarFoto(ev){
-  const file = ev.target.files[0];
+async function enviarFoto(e){
+  const file = e.target.files && e.target.files[0];
   if(!file || !jogador) return;
-  const fotoMsg = document.getElementById('foto-msg');
-  fotoMsg.textContent = 'A enviar foto...';
+  const msg = document.getElementById('foto-msg');
+  msg.textContent = 'A enviar foto...';
+  msg.className = 'msg-box';
+
   try{
-    const ext = file.name.split('.').pop() || 'jpg';
-    const caminho = `${jogador.id}.${ext}`;
-    const { error: upErr } = await sb.storage.from('fotos-jogadores').upload(caminho, file, { upsert: true });
-    if(upErr){ fotoMsg.textContent = 'Erro no envio: ' + upErr.message; return; }
-    
-    const { data: pub } = sb.storage.from('fotos-jogadores').getPublicUrl(caminho);
-    const url = pub.publicUrl + '?t=' + Date.now();
-    const { error: updErr } = await sb.from('jogadores').update({ foto_url: url }).eq('id', jogador.id);
-    if(updErr){ fotoMsg.textContent = 'Erro ao guardar foto: ' + updErr.message; return; }
-    
-    jogador.foto_url = url;
-    document.getElementById('foto-img').src = url;
+    const path = `${jogador.id}.png`;
+    const { error: upErr } = await sb.storage.from('fotos-jogadores').upload(path, file, { upsert: true });
+    if(upErr){
+      msg.textContent = 'Erro no envio da foto: ' + upErr.message;
+      msg.className = 'msg-box err';
+      return;
+    }
+
+    const { data: pubData } = sb.storage.from('fotos-jogadores').getPublicUrl(path);
+    const fotoUrl = pubData.publicUrl + '?t=' + Date.now();
+
+    await sb.from('jogadores').update({ foto_url: fotoUrl }).eq('id', jogador.id);
+    jogador.foto_url = fotoUrl;
+    document.getElementById('foto-img').src = fotoUrl;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
-    fotoMsg.textContent = 'Foto atualizada com sucesso.';
-    setTimeout(()=>{ fotoMsg.textContent=''; }, 3500);
-  }catch(e){
-    fotoMsg.textContent = 'Erro: ' + e.message;
+
+    msg.textContent = '✓ Foto atualizada!';
+    msg.className = 'msg-box ok';
+    setTimeout(()=>{ msg.textContent = ''; msg.className = 'msg-box'; }, 3000);
+  }catch(err){
+    msg.textContent = 'Erro: ' + (err.message || err);
+    msg.className = 'msg-box err';
   }
 }
 
-// ---- EQUIPAMENTOS & PAGAMENTOS ----
+// ---- EQUIPAMENTO ----
 async function carregarEquipamento(){
   if(!jogador) return;
-  const { data } = await sb.from('equipamentos').select('*').eq('jogador_id', jogador.id);
+  const { data } = await sb.from('pedidos_equipamento').select('*').eq('jogador_id', jogador.id);
   const tbody = document.getElementById('equip-tbody');
   if(!data || data.length === 0){
-    tbody.innerHTML = '<tr><td colspan="3" class="vazio">Ainda sem equipamento registado.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3" class="vazio">Sem pedido de equipamento registado.</td></tr>';
     return;
   }
-  tbody.innerHTML = data.map(e =>
-    `<tr>
-      <td>${e.tamanho || '—'}</td>
+  tbody.innerHTML = data.map(e => `
+    <tr>
+      <td><b>${e.tamanho || '—'}</b></td>
       <td>${e.numero || '—'}</td>
-      <td><span class="badge ${e.estado || 'pedido'}">${e.estado || 'pedido'}</span></td>
+      <td><span class="badge badge-confirmado">${e.estado || 'registado'}</span></td>
     </tr>`
   ).join('');
 }
 
+// ---- PAGAMENTOS ----
 async function carregarPagamentos(){
   if(!jogador) return;
   const { data } = await sb.from('pagamentos').select('*').eq('jogador_id', jogador.id).order('data_pagamento', {ascending:false});
@@ -769,7 +855,7 @@ async function carregarPagamentos(){
   document.getElementById('pag-total').textContent = total.toLocaleString('pt-PT') + ' Kz';
 }
 
-// ---- JOGOS MARCADOS E SUGESTÕES ----
+// ---- JOGOS & SUGESTÕES ----
 const RESULTADOS = { vitoria: 'Vitória', empate: 'Empate', derrota: 'Derrota' };
 
 async function carregarJogos(){
@@ -780,50 +866,77 @@ async function carregarJogos(){
   const { data: pendentesMeus } = await sb.from('jogos').select('*').eq('estado','pendente').eq('sugerido_por_jogador_id', jogador.id).order('data_jogo');
 
   const linhas = [];
-  (confirmados||[]).forEach(j => linhas.push(
-    `<tr>
-      <td>${j.data_jogo}</td>
-      <td>${j.hora ? j.hora.slice(0,5) : '—'}</td>
-      <td><b>vs ${j.adversario||'—'}</b></td>
-      <td>${j.local||'—'}</td>
-      <td>${j.resultado_estado ? RESULTADOS[j.resultado_estado] : '<span class="badge confirmado">Confirmado</span>'}</td>
-    </tr>`
-  ));
-  (pendentesMeus||[]).forEach(j => linhas.push(
-    `<tr>
-      <td>${j.data_jogo}</td>
-      <td>${j.hora ? j.hora.slice(0,5) : '—'}</td>
-      <td>vs ${j.adversario||'—'}</td>
-      <td>${j.local||'—'}</td>
-      <td><span class="badge pendente">Pendente de aprovação</span></td>
-    </tr>`
-  ));
+
+  (confirmados || []).forEach(j => {
+    const advInfo = extrairAdversarioEContacto(j.adversario);
+    const det = parseDetalhesJogo(j.resultado, j.resultado_estado);
+    const telLimpo = advInfo.contacto ? advInfo.contacto.replace(/\s+/g,'') : null;
+
+    let resBadge = '<span class="badge badge-confirmado">Confirmado</span>';
+    if(j.resultado_estado === 'vitoria') resBadge = '<span class="badge badge-vitoria">Vitória</span>';
+    else if(j.resultado_estado === 'derrota') resBadge = '<span class="badge badge-derrota">Derrota</span>';
+    else if(j.resultado_estado === 'empate') resBadge = '<span class="badge badge-empate">Empate</span>';
+
+    linhas.push(`
+      <tr>
+        <td><b>${j.data_jogo}</b></td>
+        <td>${j.hora ? j.hora.slice(0,5) : '—'}</td>
+        <td>
+          <b>vs ${advInfo.nome}</b>
+          ${advInfo.contacto ? `<br><a href="tel:${telLimpo}" class="rep-contact">📞 Rep: ${advInfo.contacto}</a>` : ''}
+        </td>
+        <td>${j.local || '—'}</td>
+        <td>
+          ${resBadge}
+          ${det.placar ? `<span class="score-line">${det.placar}</span>` : ''}
+          ${det.marcadores ? `<span class="scorers-line">⚽ ${det.marcadores.replace(/^golos:?/i,'').trim()}</span>` : ''}
+        </td>
+      </tr>
+    `);
+  });
+
+  (pendentesMeus || []).forEach(j => {
+    const advInfo = extrairAdversarioEContacto(j.adversario);
+    const telLimpo = advInfo.contacto ? advInfo.contacto.replace(/\s+/g,'') : null;
+
+    linhas.push(`
+      <tr style="opacity:0.85; background:rgba(0,0,0,0.01);">
+        <td>${j.data_jogo}</td>
+        <td>${j.hora ? j.hora.slice(0,5) : '—'}</td>
+        <td>
+          vs ${advInfo.nome}
+          ${advInfo.contacto ? `<br><a href="tel:${telLimpo}" class="rep-contact">📞 Rep: ${advInfo.contacto}</a>` : ''}
+        </td>
+        <td>${j.local || '—'}</td>
+        <td><span class="badge badge-pendente">A aguardar aprovação</span></td>
+      </tr>
+    `);
+  });
 
   tbody.innerHTML = linhas.length ? linhas.join('') : '<tr><td colspan="5" class="vazio">Sem jogos marcados ou pendentes.</td></tr>';
 }
 
-function mostrarErroGlobal(e){
-  const el = document.getElementById('global-err');
-  if(!el) return;
-  el.textContent = 'Aviso: ' + (e && e.message ? e.message : e);
-  el.style.display = 'block';
-  setTimeout(()=>{ el.style.display='none'; }, 4000);
+// 1. Recupera parâmetros da URL (ex: ?codigo=...)
+const urlParams = new URLSearchParams(window.location.search);
+const paramCodigo = urlParams.get('codigo');
+if(paramCodigo){
+  document.getElementById('login-codigo').value = paramCodigo;
+  fazerLogin();
+} else {
+  // 2. Recupera sessão local se existir
+  try{
+    const saved = localStorage.getItem('fcnv_jogador');
+    if(saved){
+      const parsed = JSON.parse(saved);
+      if(parsed && parsed.id){
+        jogador = parsed;
+        entrarNaApp();
+      }
+    }
+  }catch(e){}
 }
 
-// Recupera sessão local
-try{
-  const saved = localStorage.getItem('fcnv_jogador');
-  if(saved){
-    const parsed = JSON.parse(saved);
-    if(parsed && parsed.id){
-      jogador = parsed;
-      entrarNaApp();
-    }
-  }
-}catch(e){}
-
-// Permite submeter login com Enter
-document.getElementById('login-codigo').addEventListener('keypress', (e)=>{
+document.getElementById('login-codigo').addEventListener('keypress', (e) => {
   if(e.key === 'Enter') fazerLogin();
 });
 </script>
