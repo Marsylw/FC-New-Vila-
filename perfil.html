@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FC New Vila — O meu perfil</title>
 <meta name="description" content="Área de jogador do FC New Vila. Consulta os teus dados, jogos, pagamentos e gere o teu código de acesso.">
-<link rel="icon" type="image/jpeg" href="/logo.jpg">
-<script src="/logo-data.js"></script>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<script src="logo-data.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -171,21 +171,24 @@
 <!-- TELA DE LOGIN DO ATLETA -->
 <div id="login-screen">
   <div class="login-card">
-    <img src="/logo.jpg" alt="FC New Vila" id="login-logo-img">
+    <img src="logo.jpg" alt="FC New Vila" id="login-logo-img">
     <h1>FC NEW VILA</h1>
-    <p>Área Oficial do Atleta</p>
+    <p>Área Oficial do Atleta (Acesso Protegido)</p>
 
-    <label for="login-codigo">O teu código de acesso</label>
-    <input id="login-codigo" maxlength="8" placeholder="ex: marsylw" autofocus autocomplete="off">
-    <p class="small-note">Introduz o teu código (menos de 8 caracteres)</p>
+    <label for="login-codigo">Palavra-passe / Código Pessoal</label>
+    <div style="position:relative; margin-bottom:6px;">
+      <input id="login-codigo" type="password" maxlength="8" placeholder="Introduz o teu código" autofocus autocomplete="current-password" style="padding-right:40px;">
+      <button type="button" id="btn-toggle-pwd" onclick="toggleVisibilidadeCodigo()" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:16px; padding:4px;" title="Mostrar/Ocultar palavra-passe">👁️</button>
+    </div>
+    <p class="small-note">Apenas atletas autorizados com código pessoal podem aceder.</p>
 
     <button class="primary" id="btn-login" onclick="fazerLogin()">
-      <span>Entrar no Perfil</span>
+      <span>🔒 Entrar no Perfil</span>
     </button>
     <div id="login-msg" class="msg-box"></div>
 
     <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between;">
-      <a href="publico.html" style="font-size:12px; color:var(--muted); text-decoration:none;">← Site Público</a>
+      <a href="publico.html" style="font-size:12px; color:var(--muted); text-decoration:none;">← Voltar ao Site Público</a>
       <a href="admin.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Painel Admin →</a>
     </div>
   </div>
@@ -195,7 +198,7 @@
 <div id="app" class="hidden">
   <header>
     <a href="publico.html" class="header-brand">
-      <img src="/logo.jpg" alt="FC New Vila" class="header-logo" id="app-logo-img">
+      <img src="logo.jpg" alt="FC New Vila" class="header-logo" id="app-logo-img">
       <div class="header-title">
         <b>FC NEW VILA</b>
         <span>Perfil do Atleta</span>
@@ -213,7 +216,7 @@
     <div class="card">
       <div class="perfil-top">
         <div class="foto-wrap">
-          <img id="foto-img" src="/logo.jpg" alt="Foto">
+          <img id="foto-img" src="logo.jpg" alt="Foto">
           <label class="foto-btn" title="Alterar foto de perfil">
             📷
             <input type="file" accept="image/*" onchange="enviarFoto(event)">
@@ -374,7 +377,7 @@ const SUPABASE_URL = 'https://dnpomwkwpxagiecnqjpt.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DTbIm2GgS9iNBYqNTirpLA_8Wdin2ND';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const LOGO = window.FCNV_LOGO || '/logo.jpg';
+const LOGO = window.FCNV_LOGO || 'logo.jpg';
 document.getElementById('login-logo-img').src = LOGO;
 document.getElementById('login-logo-img').onerror = function(){ this.src = LOGO; };
 document.getElementById('app-logo-img').src = LOGO;
@@ -413,6 +416,20 @@ function parseDetalhesJogo(resultado, resultado_estado){
   return { placar, marcadores };
 }
 
+function toggleVisibilidadeCodigo(){
+  const input = document.getElementById('login-codigo');
+  const btn = document.getElementById('btn-toggle-pwd');
+  if(input.type === 'password'){
+    input.type = 'text';
+    btn.textContent = '🔒';
+    btn.title = 'Ocultar palavra-passe';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+    btn.title = 'Mostrar palavra-passe';
+  }
+}
+
 // ---- LOGIN DO ATLETA ----
 async function fazerLogin(){
   const input = document.getElementById('login-codigo');
@@ -428,13 +445,13 @@ async function fazerLogin(){
     return;
   }
   if(codigo.length > 8){
-    msg.textContent = 'O código deve ter menos de 8 caracteres.';
+    msg.textContent = 'O código tem menos de 8 caracteres.';
     msg.className = 'msg-box err';
     return;
   }
 
   btn.disabled = true;
-  btn.innerHTML = '<span>A verificar...</span>';
+  btn.innerHTML = '<span>A verificar credenciais...</span>';
 
   try{
     let usuario = null;
@@ -465,29 +482,37 @@ async function fazerLogin(){
     }
 
     if(!usuario || !usuario.id){
-      msg.textContent = 'Código incorreto ou jogador não encontrado.';
+      msg.textContent = 'Código ou palavra-passe incorreta.';
       msg.className = 'msg-box err';
       return;
     }
 
     jogador = usuario;
-    try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
+    try{
+      sessionStorage.setItem('fcnv_jogador', JSON.stringify(jogador));
+      localStorage.removeItem('fcnv_jogador'); // remove qualquer sessão permanente insegura
+    }catch(e){}
     entrarNaApp();
   }catch(err){
-    msg.textContent = 'Erro ao verificar código: ' + (err.message || err);
+    msg.textContent = 'Erro de autenticação: ' + (err.message || err);
     msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
-    btn.innerHTML = '<span>Entrar no Perfil</span>';
+    btn.innerHTML = '<span>🔒 Entrar no Perfil</span>';
   }
 }
 
 function sair(){
   jogador = null;
-  try{ localStorage.removeItem('fcnv_jogador'); }catch(e){}
+  try{
+    sessionStorage.removeItem('fcnv_jogador');
+    localStorage.removeItem('fcnv_jogador');
+  }catch(e){}
   document.getElementById('app').classList.add('hidden');
   document.getElementById('login-screen').classList.remove('hidden');
   document.getElementById('login-codigo').value = '';
+  document.getElementById('login-codigo').type = 'password';
+  document.getElementById('btn-toggle-pwd').textContent = '👁️';
   document.getElementById('login-msg').textContent = '';
   document.getElementById('login-msg').className = 'msg-box';
 }
@@ -596,14 +621,23 @@ async function sugerirJogo(){
   btn.innerHTML = '<span>A enviar sugestão...</span>';
 
   try{
-    const { data, error } = await sb.from('jogos').insert({
+    const insertPayload = {
       data_jogo,
       hora: hora || null,
       adversario: adversarioCompleto,
+      contacto_adversario: repContacto || null,
       local: local || null,
       estado: 'pendente',
       sugerido_por_jogador_id: jogador.id
-    }).select();
+    };
+
+    let { data, error } = await sb.from('jogos').insert(insertPayload).select();
+    if(error && error.message && error.message.includes('column')){
+      delete insertPayload.contacto_adversario;
+      const retry = await sb.from('jogos').insert(insertPayload).select();
+      error = retry.error;
+      data = retry.data;
+    }
 
     if(error){
       if(error.code === '23505'){
@@ -916,25 +950,27 @@ async function carregarJogos(){
   tbody.innerHTML = linhas.length ? linhas.join('') : '<tr><td colspan="5" class="vazio">Sem jogos marcados ou pendentes.</td></tr>';
 }
 
-// 1. Recupera parâmetros da URL (ex: ?codigo=...)
-const urlParams = new URLSearchParams(window.location.search);
-const paramCodigo = urlParams.get('codigo');
-if(paramCodigo){
-  document.getElementById('login-codigo').value = paramCodigo;
-  fazerLogin();
-} else {
-  // 2. Recupera sessão local se existir
+// Remove qualquer código exposto na URL por segurança
+if(window.location.search.includes('codigo=')){
   try{
-    const saved = localStorage.getItem('fcnv_jogador');
-    if(saved){
-      const parsed = JSON.parse(saved);
-      if(parsed && parsed.id){
-        jogador = parsed;
-        entrarNaApp();
-      }
-    }
+    window.history.replaceState({}, document.title, window.location.pathname);
   }catch(e){}
 }
+
+// Limpa sessões persistentes antigas inseguras
+try{ localStorage.removeItem('fcnv_jogador'); }catch(e){}
+
+// Recupera apenas sessão ativa desta aba (sessionStorage)
+try{
+  const saved = sessionStorage.getItem('fcnv_jogador');
+  if(saved){
+    const parsed = JSON.parse(saved);
+    if(parsed && parsed.id){
+      jogador = parsed;
+      entrarNaApp();
+    }
+  }
+}catch(e){}
 
 document.getElementById('login-codigo').addEventListener('keypress', (e) => {
   if(e.key === 'Enter') fazerLogin();

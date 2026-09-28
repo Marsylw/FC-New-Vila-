@@ -7,8 +7,8 @@
 <meta name="description" content="Plataforma oficial do clube FC New Vila com gestão de jogos, plantel e perfil de atletas.">
 <meta property="og:title" content="FC New Vila">
 <meta property="og:description" content="Plataforma oficial do clube FC New Vila com gestão de jogos, plantel e perfil de atletas.">
-<link rel="icon" type="image/jpeg" href="/logo.jpg">
-<script src="/logo-data.js"></script>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<script src="logo-data.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -133,20 +133,13 @@
 
   /* Tabela de Plantel */
   table{width:100%; border-collapse:collapse; font-size:13px;}
-  th,td{text-align:left; padding:8px 8px; border-bottom:1px solid var(--border);}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--border);}
   th{color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.03em;}
   .jogador-cell{display:flex; align-items:center; gap:10px;}
   .jogador-cell img{width:32px; height:32px; border-radius:50%; object-fit:cover; background:#f1f5f9; border:1px solid var(--border); flex-shrink:0;}
   .jogador-cell .j-info b{display:block; font-size:13px; line-height:1.2;}
   .jogador-cell .j-info span{font-size:11px; color:var(--muted);}
-  .camisola-badge{display:inline-block; font-weight:800; color:var(--navy); background:rgba(21,42,82,0.08); padding:2px 6px; border-radius:4px; font-size:12px;}
-  
-  .btn-enter-player{
-    color:var(--navy); font-size:11px; font-weight:700; text-decoration:none; padding:4px 8px;
-    border-radius:4px; background:rgba(201,162,39,0.18); border:1px solid var(--gold);
-    white-space:nowrap; transition:all 0.15s ease;
-  }
-  .btn-enter-player:hover{background:var(--gold); color:var(--navy-dark);}
+  .camisola-badge{display:inline-block; font-weight:800; color:var(--navy); background:rgba(21,42,82,0.08); padding:2px 8px; border-radius:4px; font-size:12px;}
 
   .tab{display:none;}
   .tab.active{display:block;}
@@ -157,7 +150,7 @@
 
 <header>
   <a href="publico.html" class="header-left">
-    <img src="/logo.jpg" alt="FC New Vila" class="header-logo" id="header-logo-img">
+    <img src="logo.jpg" alt="FC New Vila" class="header-logo" id="header-logo-img">
     <div class="header-title">
       <b>FC NEW VILA</b>
       <span>Clube Oficial</span>
@@ -170,13 +163,13 @@
   </div>
 </header>
 
-<!-- Chamada de Ação para Jogadores -->
+<!-- Chamada de Ação Protegida para Jogadores -->
 <div class="player-callout">
   <div class="player-callout-text">
-    <b>És atleta do FC New Vila?</b>
-    <span>Acede ao teu perfil para veres o teu código, jogos e convocatórias.</span>
+    <b>Área Exclusiva de Atletas</b>
+    <span>Acede com o teu código pessoal secreto para consultares jogos, pagamentos e gerir o teu perfil.</span>
   </div>
-  <a href="perfil.html" class="player-callout-btn">Aceder ao Perfil ➔</a>
+  <a href="perfil.html" class="player-callout-btn">Entrar com Código ➔</a>
 </div>
 
 <nav class="main-tabs" id="nav">
@@ -226,19 +219,18 @@
   <!-- TAB PLANTEL -->
   <section id="tab-plantel" class="tab">
     <div class="card">
-      <h2>Plantel Oficial</h2>
+      <h2>Plantel Oficial do Clube</h2>
       <div style="overflow-x:auto;">
         <table>
           <thead>
             <tr>
               <th>Atleta</th>
               <th>Posição</th>
-              <th>Nº</th>
-              <th>Acesso</th>
+              <th>Nº Camisola</th>
             </tr>
           </thead>
           <tbody id="plantel-tbody">
-            <tr><td colspan="4" class="vazio">A carregar atletas...</td></tr>
+            <tr><td colspan="3" class="vazio">A carregar atletas...</td></tr>
           </tbody>
         </table>
       </div>
@@ -252,7 +244,7 @@ const SUPABASE_URL = 'https://dnpomwkwpxagiecnqjpt.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DTbIm2GgS9iNBYqNTirpLA_8Wdin2ND';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const LOGO = window.FCNV_LOGO || '/logo.jpg';
+const LOGO = window.FCNV_LOGO || 'logo.jpg';
 document.getElementById('header-logo-img').src = LOGO;
 document.getElementById('header-logo-img').onerror = function(){ this.src = LOGO; };
 
@@ -325,8 +317,11 @@ function parseDetalhesJogo(resultado, resultado_estado){
 async function carregar(){
   const hoje = new Date().toISOString().slice(0,10);
 
-  // 1. Jogadores
-  const { data: jogadores } = await sb.from('jogadores').select('*').order('nome');
+  // 1. Jogadores (apenas campos públicos para proteger a privacidade dos atletas)
+  const { data: jogadores } = await sb.from('jogadores')
+    .select('id, nome, posicao, numero_camisola, foto_url')
+    .order('nome');
+
   if(jogadores){
     document.getElementById('s-jogadores').textContent = jogadores.length;
     if(jogadores.length){
@@ -345,11 +340,6 @@ async function carregar(){
             </td>
             <td>${j.posicao || '—'}</td>
             <td><span class="camisola-badge">${j.numero_camisola ? '#' + j.numero_camisola : '—'}</span></td>
-            <td>
-              <a href="perfil.html?codigo=${encodeURIComponent(j.codigo_pessoal || '')}" class="btn-enter-player" title="Aceder com perfil deste atleta">
-                Entrar ➔
-              </a>
-            </td>
           </tr>
         `;
       }).join('');
@@ -369,7 +359,6 @@ async function carregar(){
     document.getElementById('s-jogos-total').textContent = jogos.length;
     
     if(jogos.length > 0){
-      // Renderiza lista detalhada de jogos
       document.getElementById('jogos-lista').innerHTML = jogos.map(j => {
         const f = formatarData(j.data_jogo);
         const advInfo = extrairAdversarioEContacto(j.adversario);

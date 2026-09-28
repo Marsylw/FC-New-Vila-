@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FC New Vila — Painel de Gestão</title>
 <meta name="description" content="Painel de administração do FC New Vila. Gestão de atletas, equipamentos, pagamentos, jogos e resultados.">
-<link rel="icon" type="image/jpeg" href="/logo.jpg">
-<script src="/logo-data.js"></script>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<script src="logo-data.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -150,7 +150,7 @@
 <!-- LOGIN ADMIN -->
 <div id="login-screen">
   <div class="login-card">
-    <img src="/logo.jpg" alt="FC New Vila" id="admin-login-logo">
+    <img src="logo.jpg" alt="FC New Vila" id="admin-login-logo">
     <h1>FC NEW VILA</h1>
     <p>Painel da Organização / Direção</p>
     <label style="text-align:left;">Nome de utilizador</label>
@@ -171,7 +171,7 @@
 <!-- APLICAÇÃO ADMIN -->
 <div id="app" class="hidden">
   <header>
-    <img src="/logo.jpg" alt="FC New Vila" class="header-logo" id="admin-header-logo">
+    <img src="logo.jpg" alt="FC New Vila" class="header-logo" id="admin-header-logo">
     <h1>FC New Vila — Painel de Gestão</h1>
     <a href="publico.html" class="nav-link">🏠 Site</a>
     <a href="perfil.html" class="nav-link">⚽ Perfil Atleta</a>
@@ -551,7 +551,7 @@ const SUPABASE_URL = 'https://dnpomwkwpxagiecnqjpt.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_DTbIm2GgS9iNBYqNTirpLA_8Wdin2ND';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const LOGO = window.FCNV_LOGO || '/logo.jpg';
+const LOGO = window.FCNV_LOGO || 'logo.jpg';
 document.getElementById('admin-login-logo').src = LOGO;
 document.getElementById('admin-login-logo').onerror = function(){ this.src = LOGO; };
 document.getElementById('admin-header-logo').src = LOGO;
@@ -639,7 +639,10 @@ async function fazerLogin(){
     }
 
     membro = user;
-    try{ localStorage.setItem('fcnv_membro', JSON.stringify(membro)); }catch(e){}
+    try{
+      sessionStorage.setItem('fcnv_membro', JSON.stringify(membro));
+      localStorage.removeItem('fcnv_membro'); // elimina sessões antigas inseguras
+    }catch(e){}
     entrarNaApp();
   }catch(e){
     errEl.textContent = 'Erro de comunicação: ' + (e.message || e);
@@ -651,7 +654,10 @@ async function fazerLogin(){
 
 function sair(){
   membro = null;
-  try{ localStorage.removeItem('fcnv_membro'); }catch(e){}
+  try{
+    sessionStorage.removeItem('fcnv_membro');
+    localStorage.removeItem('fcnv_membro');
+  }catch(e){}
   document.getElementById('app').classList.add('hidden');
   document.getElementById('login-screen').classList.remove('hidden');
   document.getElementById('login-nome').value = '';
@@ -930,12 +936,19 @@ async function addJogo(){
     data_jogo,
     hora: document.getElementById('g-hora').value || null,
     adversario: adversarioCompleto,
+    contacto_adversario: repContacto || null,
     local: document.getElementById('g-local').value.trim() || null,
     marcado_por: membro.id,
     estado: 'confirmado'
   };
 
-  const { error } = await sb.from('jogos').insert(body);
+  let { error } = await sb.from('jogos').insert(body);
+  if(error && error.message && error.message.includes('column')){
+    delete body.contacto_adversario;
+    const retry = await sb.from('jogos').insert(body);
+    error = retry.error;
+  }
+
   if(error){
     if(error.code === '23505'){ showMsg('Já existe um jogo confirmado nesse mesmo dia.'); }
     else { showMsg('Erro ao marcar jogo: ' + error.message); }
@@ -1034,10 +1047,22 @@ async function salvarModalResultado(){
     resultadoFinal = (resultadoFinal ? resultadoFinal + ' | ' : '') + notas;
   }
 
-  const { error } = await sb.from('jogos').update({
+  const updatePayload = {
     resultado_estado: desfecho,
-    resultado: resultadoFinal || null
-  }).eq('id', id);
+    resultado: resultadoFinal || null,
+    placar: placar || null,
+    marcadores: marcadores || null,
+    resumo: notas || null
+  };
+
+  let { error } = await sb.from('jogos').update(updatePayload).eq('id', id);
+  if(error && error.message && error.message.includes('column')){
+    const fallback = await sb.from('jogos').update({
+      resultado_estado: desfecho,
+      resultado: resultadoFinal || null
+    }).eq('id', id);
+    error = fallback.error;
+  }
 
   if(error){ showMsg('Erro ao guardar resultado: ' + error.message); return; }
 
@@ -1139,9 +1164,12 @@ async function carregarMembros(){
   ).join('') : '<tr><td colspan="3" class="vazio">Sem membros registados.</td></tr>';
 }
 
-// Recupera sessão local de membro
+// Limpa sessões permanentes antigas inseguras
+try{ localStorage.removeItem('fcnv_membro'); }catch(e){}
+
+// Recupera apenas sessão ativa desta aba (sessionStorage)
 try{
-  const saved = localStorage.getItem('fcnv_membro');
+  const saved = sessionStorage.getItem('fcnv_membro');
   if(saved){
     const parsed = JSON.parse(saved);
     if(parsed && parsed.id){
