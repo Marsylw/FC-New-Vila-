@@ -158,8 +158,8 @@
   </a>
   <div class="nav-links">
     <a href="publico.html" class="nav-link active">Início</a>
-    <a href="perfil.html" class="nav-link highlight">⚽ O meu perfil</a>
-    <a href="admin.html" class="nav-link">🔒 Painel</a>
+    <a href="perfil.html" class="nav-link highlight">O meu perfil</a>
+    <a href="admin.html" class="nav-link">Painel</a>
   </div>
 </header>
 
@@ -382,12 +382,12 @@ async function carregar(){
             ${advInfo.contacto ? `
               <div style="margin-bottom:6px;">
                 <a href="tel:${telLimpo}" class="rep-contact" title="Ligar para representante">
-                  📞 Rep: ${advInfo.contacto}
+                   Rep: ${advInfo.contacto}
                 </a>
               </div>
             ` : ''}
             <div class="game-location">
-              📍 ${j.local || 'Local a definir'}
+               ${j.local || 'Local a definir'}
             </div>
 
             ${(det.placar || det.marcadores || det.resumo) ? `
@@ -396,8 +396,8 @@ async function carregar(){
                   ${det.placar ? `<span class="score-badge">${det.placar}</span>` : ''}
                   ${j.resultado_estado ? `<span style="font-size:12px; font-weight:700; color:var(--muted);">(${RESULTADOS[j.resultado_estado]})</span>` : ''}
                 </div>
-                ${det.marcadores ? `<div class="scorers-line">⚽ <b>Quem marcou:</b> ${det.marcadores.replace(/^golos:?/i,'').trim()}</div>` : ''}
-                ${det.resumo ? `<div class="game-notes">📝 ${det.resumo}</div>` : ''}
+                ${det.marcadores ? `<div class="scorers-line"><b>Quem marcou:</b> ${det.marcadores.replace(/^golos:?/i,'').trim()}</div>` : ''}
+                ${det.resumo ? `<div class="game-notes">${det.resumo}</div>` : ''}
               </div>
             ` : ''}
           </div>
@@ -416,7 +416,7 @@ async function carregar(){
             <div class="info">
               <b>vs ${advInfo.nome}</b>
               <span>${proximo.hora ? proximo.hora.slice(0,5) : 'Hora a definir'} · ${proximo.local || 'Campo a definir'}</span>
-              ${advInfo.contacto ? `<a href="tel:${telLimpo}" class="rep-contact">📞 Rep: ${advInfo.contacto}</a>` : ''}
+              ${advInfo.contacto ? `<a href="tel:${telLimpo}" class="rep-contact"> Rep: ${advInfo.contacto}</a>` : ''}
             </div>
           </div>
         `;
@@ -449,7 +449,7 @@ async function carregar(){
                 <span class="score-badge">${det.placar || 'Jogo Disputado'}</span>
               </div>
               ${det.marcadores ? `<div class="scorers-line">⚽ <b>Quem marcou:</b> ${det.marcadores.replace(/^golos:?/i,'').trim()}</div>` : ''}
-              ${det.resumo ? `<div class="game-notes">📝 ${det.resumo}</div>` : ''}
+              ${det.resumo ? `<div class="game-notes"> ${det.resumo}</div>` : ''}
             </div>
           </div>
         `;
