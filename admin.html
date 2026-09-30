@@ -173,8 +173,8 @@
   <header>
     <img src="logo.jpg" alt="FC New Vila" class="header-logo" id="admin-header-logo">
     <h1>FC New Vila — Painel de Gestão</h1>
-    <a href="publico.html" class="nav-link">🏠 Site</a>
-    <a href="perfil.html" class="nav-link">⚽ Perfil Atleta</a>
+    <a href="publico.html" class="nav-link">Site</a>
+    <a href="perfil.html" class="nav-link">Perfil Atleta</a>
     <span class="who" id="who"></span>
     <button class="btn-sair" onclick="sair()">Sair</button>
   </header>
@@ -326,7 +326,7 @@
                 <th>Hora</th>
                 <th>Adversário / Representante</th>
                 <th>Local</th>
-                <th>Resultado & Score (Quem Marcou)</th>
+                <th>Resultado </th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -439,7 +439,7 @@
 <div id="modal-editar-jogador" class="modal-backdrop hidden">
   <div class="modal-card">
     <div class="modal-header">
-      <h3>✏️ Editar Perfil do Atleta</h3>
+      <h3>Editar Perfil do Atleta</h3>
       <button class="modal-close" onclick="fecharModalJogador()">✕</button>
     </div>
     
@@ -481,7 +481,7 @@
       <label for="edit-j-codigo">Código Pessoal de Acesso (máx. 7 caracteres)</label>
       <div style="display:flex; gap:8px;">
         <input id="edit-j-codigo" maxlength="7" style="font-family:monospace; font-weight:700;">
-        <button type="button" class="mini-btn secondary" onclick="adminModalGerarCodigo()" style="white-space:nowrap;">🎲 Gerar outro</button>
+        <button type="button" class="mini-btn secondary" onclick="adminModalGerarCodigo()" style="white-space:nowrap;">Gerar outro</button>
       </div>
       <small style="font-size:11px; color:var(--muted); display:block; margin-top:4px;">
         Código que o atleta usa para entrar no perfil (< 8 caracteres).
@@ -499,7 +499,7 @@
 <div id="modal-resultado-jogo" class="modal-backdrop hidden">
   <div class="modal-card">
     <div class="modal-header">
-      <h3 id="res-modal-titulo">⚽ Resultado & Score do Jogo</h3>
+      <h3 id="res-modal-titulo">Resultado</h3>
       <button class="modal-close" onclick="fecharModalResultado()">✕</button>
     </div>
     
@@ -691,7 +691,7 @@ async function carregarTudo(){
 function copiarCodigo(cod){
   if(!cod) return;
   navigator.clipboard.writeText(cod).then(()=>{
-    showMsg(`✓ Código "${cod}" copiado para a área de transferência!`, true);
+    showMsg(`Código "${cod}" copiado para a área de transferência!`, true);
   }).catch(()=>{});
 }
 
@@ -717,10 +717,10 @@ async function carregarJogadores(){
       <td>${j.contacto ? `<a href="tel:${j.contacto.replace(/\s+/g,'')}" class="rep-contact">📞 ${j.contacto}</a>` : '—'}</td>
       <td>
         <span class="codigo">${j.codigo_pessoal || '—'}</span>
-        <button class="mini-btn secondary" onclick="copiarCodigo('${j.codigo_pessoal}')" title="Copiar código">📋</button>
+        <button class="mini-btn secondary" onclick="copiarCodigo('${j.codigo_pessoal}')" title="Copiar código"></button>
       </td>
       <td>
-        <button class="mini-btn" onclick="abrirModalEditarJogador('${j.id}')" title="Editar perfil completo">✏️ Editar</button>
+        <button class="mini-btn" onclick="abrirModalEditarJogador('${j.id}')" title="Editar perfil completo">Editar</button>
         <a href="perfil.html?codigo=${encodeURIComponent(j.codigo_pessoal || '')}" target="_blank" class="mini-btn secondary" style="text-decoration:none;" title="Ver perfil como atleta">👁️ Ver Perfil</a>
         <button class="mini-btn reject" onclick="eliminarJogador('${j.id}', '${(j.nome||'').replace(/'/g, "\\'")}')" title="Eliminar jogador">✕</button>
       </td>
@@ -767,7 +767,7 @@ async function addJogador(){
     return;
   }
 
-  showMsg(`✓ Jogador "${nome}" adicionado com código "${body.codigo_pessoal}".`, true);
+  showMsg(`Jogador "${nome}" adicionado com código "${body.codigo_pessoal}".`, true);
   document.getElementById('j-nome').value = '';
   document.getElementById('j-numero').value = '';
   document.getElementById('j-contacto').value = '';
@@ -779,7 +779,7 @@ async function eliminarJogador(id, nome){
   if(!confirm(`Tens a certeza que queres eliminar o atleta "${nome}" do plantel?`)) return;
   const { error } = await sb.from('jogadores').delete().eq('id', id);
   if(error){ showMsg('Erro ao eliminar: ' + error.message); return; }
-  showMsg(`✓ Atleta "${nome}" eliminado com sucesso.`, true);
+  showMsg(`Atleta "${nome}" eliminado com sucesso.`, true);
   carregarJogadores();
 }
 
@@ -847,7 +847,7 @@ async function salvarEdicaoJogador(){
   const { error } = await sb.from('jogadores').update(updates).eq('id', id);
   if(error){ showMsg('Erro ao atualizar: ' + error.message); return; }
 
-  showMsg(`✓ Perfil do atleta "${nome}" atualizado com sucesso!`, true);
+  showMsg(`Perfil do atleta "${nome}" atualizado com sucesso!`, true);
   fecharModalJogador();
   carregarJogadores();
 }
@@ -873,8 +873,8 @@ async function carregarJogos(){
             <td>${j.local || '—'}</td>
             <td><span style="color:var(--navy); font-weight:700;">${j.jogadores?.nome || 'Atleta'}</span></td>
             <td>
-              <button class="mini-btn" onclick="confirmarJogo('${j.id}')">✓ Confirmar</button>
-              <button class="mini-btn reject" onclick="rejeitarJogo('${j.id}')">✕ Rejeitar</button>
+              <button class="mini-btn" onclick="confirmarJogo('${j.id}')">Confirmar</button>
+              <button class="mini-btn reject" onclick="rejeitarJogo('${j.id}')">Rejeitar</button>
             </td>
           </tr>
         `;
@@ -910,11 +910,11 @@ async function carregarJogos(){
           ${j.resultado_estado ? `<span class="${badgeClass}">${RESULTADOS[j.resultado_estado]}</span>` : '<span class="badge pendente">Por disputar</span>'}
           ${det.placar ? `<span class="score-badge">${det.placar}</span>` : ''}
           ${det.marcadores ? `<span class="scorers-note">⚽ ${det.marcadores.replace(/^golos:?/i,'').trim()}</span>` : ''}
-          ${det.resumo ? `<span class="scorers-note" style="font-style:italic;">📝 ${det.resumo}</span>` : ''}
+          ${det.resumo ? `<span class="scorers-note" style="font-style:italic;"> ${det.resumo}</span>` : ''}
         </td>
         <td>
           <button class="mini-btn" onclick="abrirModalResultado('${j.id}')" title="Registar ou editar score e quem marcou">
-            ⚽ Registar Placar / Marcadores
+             Registar Placar / Marcadores
           </button>
           <button class="mini-btn reject" onclick="eliminarJogo('${j.id}')" title="Remover jogo">✕</button>
         </td>
@@ -954,7 +954,7 @@ async function addJogo(){
     else { showMsg('Erro ao marcar jogo: ' + error.message); }
     return;
   }
-  showMsg('✓ Jogo marcado e confirmado com sucesso!', true);
+  showMsg('Jogo marcado e confirmado com sucesso!', true);
   document.getElementById('g-adversario').value = '';
   document.getElementById('g-rep-contacto').value = '';
   document.getElementById('g-local').value = '';
@@ -968,7 +968,7 @@ async function confirmarJogo(id){
     else { showMsg(error.message); }
     return;
   }
-  showMsg('✓ Sugestão aprovada e jogo confirmado.', true);
+  showMsg('Sugestão aprovada e jogo confirmado.', true);
   carregarJogos();
 }
 
@@ -976,7 +976,7 @@ async function rejeitarJogo(id){
   if(!confirm('Tens a certeza que queres rejeitar esta sugestão?')) return;
   const { error } = await sb.from('jogos').delete().eq('id', id);
   if(error){ showMsg(error.message); return; }
-  showMsg('✓ Sugestão rejeitada e removida.', true);
+  showMsg('Sugestão rejeitada e removida.', true);
   carregarJogos();
 }
 
@@ -984,7 +984,7 @@ async function eliminarJogo(id){
   if(!confirm('Tens a certeza que queres eliminar este jogo agendado?')) return;
   const { error } = await sb.from('jogos').delete().eq('id', id);
   if(error){ showMsg(error.message); return; }
-  showMsg('✓ Jogo removido com sucesso.', true);
+  showMsg('Jogo removido com sucesso.', true);
   carregarJogos();
 }
 
@@ -997,7 +997,7 @@ function abrirModalResultado(id){
   const det = parseDetalhesJogo(j.resultado, j.resultado_estado);
 
   document.getElementById('res-j-id').value = j.id;
-  document.getElementById('res-modal-titulo').textContent = `⚽ FC New Vila vs ${advInfo.nome} (${j.data_jogo})`;
+  document.getElementById('res-modal-titulo').textContent = `FC New Vila vs ${advInfo.nome} (${j.data_jogo})`;
   document.getElementById('res-desfecho').value = j.resultado_estado || '';
   
   // Extrai golos do placar se tiver formato "X - Y"
@@ -1066,7 +1066,7 @@ async function salvarModalResultado(){
 
   if(error){ showMsg('Erro ao guardar resultado: ' + error.message); return; }
 
-  showMsg('✓ Resultado, placar e marcadores guardados com sucesso!', true);
+  showMsg('Resultado, placar e marcadores guardados com sucesso!', true);
   fecharModalResultado();
   carregarJogos();
 }
@@ -1105,7 +1105,7 @@ async function addEquipamento(){
   };
   const { error } = await sb.from('pedidos_equipamento').insert(body);
   if(error){ showMsg(error.message); return; }
-  showMsg('✓ Pedido de equipamento registado.', true);
+  showMsg('Pedido de equipamento registado.', true);
   document.getElementById('e-numero').value = '';
   carregarEquipamentos();
 }
@@ -1113,7 +1113,7 @@ async function addEquipamento(){
 async function mudarEstadoEquip(id, estado){
   const { error } = await sb.from('pedidos_equipamento').update({ estado }).eq('id', id);
   if(error){ showMsg(error.message); return; }
-  showMsg('✓ Estado do equipamento atualizado.', true);
+  showMsg('Estado do equipamento atualizado.', true);
   carregarEquipamentos();
 }
 
@@ -1145,7 +1145,7 @@ async function addPagamento(){
   };
   const { error } = await sb.from('pagamentos').insert(body);
   if(error){ showMsg(error.message); return; }
-  showMsg('✓ Pagamento registado com sucesso.', true);
+  showMsg('Pagamento registado com sucesso.', true);
   document.getElementById('p-valor').value = '';
   document.getElementById('p-comprovativo').value = '';
   carregarPagamentos();
