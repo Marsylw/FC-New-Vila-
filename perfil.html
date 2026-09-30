@@ -183,13 +183,13 @@
     <p class="small-note">Apenas atletas autorizados com código pessoal podem aceder.</p>
 
     <button class="primary" id="btn-login" onclick="fazerLogin()">
-      <span>🔒 Entrar no Perfil</span>
+      <span>Entrar no Perfil</span>
     </button>
     <div id="login-msg" class="msg-box"></div>
 
     <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between;">
-      <a href="publico.html" style="font-size:12px; color:var(--muted); text-decoration:none;">← Voltar ao Site Público</a>
-      <a href="admin.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Painel Admin →</a>
+      <a href="publico.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Voltar ao Site Público</a>
+      <a href="admin.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Painel Admin</a>
     </div>
   </div>
 </div>
@@ -205,9 +205,9 @@
       </div>
     </a>
     <div class="header-nav">
-      <a href="publico.html" class="nav-link">🏠 Site</a>
-      <a href="admin.html" class="nav-link">🔒 Painel</a>
-      <button class="btn-sair" onclick="sair()">🚪 Sair</button>
+      <a href="publico.html" class="nav-link">Site</a>
+      <a href="admin.html" class="nav-link">Painel</a>
+      <button class="btn-sair" onclick="sair()">Sair</button>
     </div>
   </header>
 
@@ -218,7 +218,7 @@
         <div class="foto-wrap">
           <img id="foto-img" src="logo.jpg" alt="Foto">
           <label class="foto-btn" title="Alterar foto de perfil">
-            📷
+            
             <input type="file" accept="image/*" onchange="enviarFoto(event)">
           </label>
         </div>
@@ -236,7 +236,7 @@
           <div class="label">O teu código de acesso</div>
           <div class="valor" id="p-codigo-badge">••••</div>
         </div>
-        <button class="btn-copy" type="button" onclick="copiarCodigoBadge()">📋 Copiar</button>
+        <button class="btn-copy" type="button" onclick="copiarCodigoBadge()">Copiar</button>
       </div>
     </div>
 
@@ -262,7 +262,7 @@
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <input id="def-codigo" maxlength="7" placeholder="ex: gol88" style="flex:1; min-width:140px; font-family:monospace; font-weight:700;">
           <button class="secondary" type="button" onclick="gerarNovoCodigo()" title="Gera um código aleatório">
-            🎲 Gerar novo
+            Gerar novo
           </button>
           <button class="secondary" id="btn-guardar-codigo" onclick="guardarCodigo()" style="white-space:nowrap; background:var(--navy); color:#fff;">
             Guardar código
@@ -310,7 +310,7 @@
       </div>
 
       <button class="primary" id="btn-sugerir" onclick="sugerirJogo()">
-        <span>⚽ Sugerir jogo à Direção</span>
+        <span>Sugerir jogo à Direção</span>
       </button>
       <div id="sugerir-msg" class="msg-box"></div>
     </div>
@@ -498,7 +498,7 @@ async function fazerLogin(){
     msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
-    btn.innerHTML = '<span>🔒 Entrar no Perfil</span>';
+    btn.innerHTML = '<span>Entrar no Perfil</span>';
   }
 }
 
@@ -542,7 +542,7 @@ function atualizarDadosPerfil(){
   document.getElementById('p-nome').textContent = jogador.nome || 'Atleta';
   document.getElementById('p-posicao').textContent = (jogador.posicao || 'Posição a definir') + (jogador.numero_camisola ? ' · Camisola nº ' + jogador.numero_camisola : '');
   const contactoEl = document.getElementById('p-contacto');
-  if(contactoEl) contactoEl.textContent = jogador.contacto ? '📞 ' + jogador.contacto : '';
+  if(contactoEl) contactoEl.textContent = jogador.contacto ? '' + jogador.contacto : '';
   
   const fotoEl = document.getElementById('foto-img');
   if(fotoEl){
@@ -578,7 +578,7 @@ function copiarCodigoBadge(){
     const btn = document.querySelector('.btn-copy');
     if(btn){
       const original = btn.textContent;
-      btn.textContent = '✓ Copiado!';
+      btn.textContent = 'Copiado!';
       setTimeout(()=>{ btn.textContent = original; }, 2000);
     }
   }).catch(()=>{});
@@ -649,7 +649,7 @@ async function sugerirJogo(){
       return;
     }
 
-    msg.textContent = '✓ Sugestão enviada com sucesso! A direção irá analisar.';
+    msg.textContent = 'Sugestão enviada com sucesso! A direção irá analisar.';
     msg.className = 'msg-box ok';
 
     document.getElementById('s-adversario').value = '';
@@ -663,7 +663,7 @@ async function sugerirJogo(){
     msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
-    btn.innerHTML = '<span>⚽ Sugerir jogo à Direção</span>';
+    btn.innerHTML = '<span>Sugerir jogo à Direção</span>';
   }
 }
 
@@ -702,7 +702,7 @@ async function mudarNome(){
     document.getElementById('p-nome').textContent = novoNome;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    msg.textContent = '✓ Nome atualizado com sucesso!';
+    msg.textContent = 'Nome atualizado com sucesso!';
     msg.className = 'msg-box ok';
     setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className='msg-box'; }, 3500);
   }catch(e){
@@ -808,7 +808,7 @@ async function guardarCodigo(){
     document.getElementById('p-codigo-badge').textContent = novoCodigo;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    msg.textContent = `✓ Novo código "${novoCodigo}" guardado com sucesso! Já o podes usar para entrar.`;
+    msg.textContent = `Novo código "${novoCodigo}" guardado com sucesso! Já o podes usar para entrar.`;
     msg.className = 'msg-box ok';
     setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className='msg-box'; }, 5000);
   }catch(e){
@@ -845,7 +845,7 @@ async function enviarFoto(e){
     document.getElementById('foto-img').src = fotoUrl;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    msg.textContent = '✓ Foto atualizada!';
+    msg.textContent = 'Foto atualizada!';
     msg.className = 'msg-box ok';
     setTimeout(()=>{ msg.textContent = ''; msg.className = 'msg-box'; }, 3000);
   }catch(err){
@@ -939,7 +939,7 @@ async function carregarJogos(){
         <td>${j.hora ? j.hora.slice(0,5) : '—'}</td>
         <td>
           vs ${advInfo.nome}
-          ${advInfo.contacto ? `<br><a href="tel:${telLimpo}" class="rep-contact">📞 Rep: ${advInfo.contacto}</a>` : ''}
+          ${advInfo.contacto ? `<br><a href="tel:${telLimpo}" class="rep-contact"> Rep: ${advInfo.contacto}</a>` : ''}
         </td>
         <td>${j.local || '—'}</td>
         <td><span class="badge badge-pendente">A aguardar aprovação</span></td>
