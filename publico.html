@@ -448,7 +448,7 @@ async function carregar(){
               <div class="game-score-row">
                 <span class="score-badge">${det.placar || 'Jogo Disputado'}</span>
               </div>
-              ${det.marcadores ? `<div class="scorers-line">⚽ <b>Quem marcou:</b> ${det.marcadores.replace(/^golos:?/i,'').trim()}</div>` : ''}
+              ${det.marcadores ? `<div class="scorers-line"><b>Quem marcou:</b> ⚽${det.marcadores.replace(/^golos:?/i,'').trim()}</div>` : ''}
               ${det.resumo ? `<div class="game-notes"> ${det.resumo}</div>` : ''}
             </div>
           </div>
