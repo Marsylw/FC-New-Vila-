@@ -396,7 +396,7 @@ async function carregar(){
                   ${det.placar ? `<span class="score-badge">${det.placar}</span>` : ''}
                   ${j.resultado_estado ? `<span style="font-size:12px; font-weight:700; color:var(--muted);">(${RESULTADOS[j.resultado_estado]})</span>` : ''}
                 </div>
-                ${det.marcadores ? `<div class="scorers-line"><b>Quem marcou:</b> ${det.marcadores.replace(/^golos:?/i,'').trim()}</div>` : ''}
+                ${det.marcadores ? `<div class="scorers-line"><b>Quem marcou:</b> ${det.marcadores.replace(/^golos:?/i,'').trim()}⚽</div>` : ''}
                 ${det.resumo ? `<div class="game-notes">${det.resumo}</div>` : ''}
               </div>
             ` : ''}
