@@ -148,19 +148,41 @@
   th,td{text-align:left; padding:8px 8px; border-bottom:1px solid var(--border); vertical-align:middle;}
   th{color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.03em;}
 
-  .badge{display:inline-block; padding:3px 8px; border-radius:12px; font-size:10px; font-weight:700; text-transform:uppercase;}
-  .badge-vitoria{background:var(--green-bg); color:var(--green);}
-  .badge-derrota{background:var(--red-bg); color:var(--red);}
-  .badge-empate{background:var(--amber-bg); color:var(--amber);}
-  .badge-pendente{background:#e2e8f0; color:#475569;}
-  .badge-confirmado{background:#dbeafe; color:#1d4ed8;}
+  .badge{display:inline-block; padding:4px 9px; border-radius:6px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.03em;}
+  .badge-vitoria{background:#15803d; color:#ffffff;}
+  .badge-derrota{background:#b91c1c; color:#ffffff;}
+  .badge-empate{background:#b45309; color:#ffffff;}
+  .badge-pendente{background:#475569; color:#ffffff;}
+  .badge-confirmado{background:#1e40af; color:#ffffff;}
+
+  /* BADGES DE TESOURARIA NO PERFIL */
+  .badge-quota{ background:#dbeafe; color:#1e40af; font-weight:700; }
+  .badge-equip{ background:#fef3c7; color:#92400e; font-weight:700; }
+  .badge-outro{ background:#f1f5f9; color:#475569; font-weight:700; }
+  .badge-emdia{ background:#dcfce7; color:#166534; font-weight:700; }
+  .badge-devedor{ background:#fee2e2; color:#991b1b; font-weight:700; }
+  
+  .status-box{
+    padding:14px 16px; border-radius:10px; margin-bottom:14px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+  }
+  .status-box.emdia{ background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; font-weight:600; }
+  .status-box.devedor{ background:#fef2f2; border:1px solid #fecaca; color:#991b1b; font-weight:600; }
 
   .rep-contact{display:inline-flex; align-items:center; gap:4px; font-size:11px; color:#1d4ed8; font-weight:600; text-decoration:none;}
   .rep-contact:hover{text-decoration:underline;}
 
-  .score-line{font-size:13px; font-weight:800; color:var(--navy); display:block;}
-  :root[data-theme="dark"] .score-line, @media (prefers-color-scheme:dark){ .score-line{color:var(--gold);} }
-  .scorers-line{font-size:11px; color:var(--muted); display:block; margin-top:2px;}
+  .score-line{
+    font-size:14px; font-weight:800; color:#0e1d3a; background:#e2e8f0; border:1px solid #cbd5e1;
+    padding:3px 8px; border-radius:6px; display:inline-block; margin-top:4px;
+  }
+  :root[data-theme="dark"] .score-line, @media (prefers-color-scheme:dark){
+    .score-line{ color:#ffffff; background:#0f172a; border-color:#475569; }
+  }
+  .scorers-line{font-size:12px; color:#1e293b; display:block; margin-top:4px; font-weight:600;}
+  :root[data-theme="dark"] .scorers-line, @media (prefers-color-scheme:dark){
+    .scorers-line{ color:#f1f5f9; }
+  }
 
   .vazio{color:var(--muted); font-size:13px; text-align:center; padding:16px;}
   .hidden{display:none !important;}
@@ -183,13 +205,13 @@
     <p class="small-note">Apenas atletas autorizados com código pessoal podem aceder.</p>
 
     <button class="primary" id="btn-login" onclick="fazerLogin()">
-      <span>Entrar no Perfil</span>
+      <span>🔒 Entrar no Perfil</span>
     </button>
     <div id="login-msg" class="msg-box"></div>
 
     <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between;">
-      <a href="publico.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Voltar ao Site Público</a>
-      <a href="admin.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Painel Admin</a>
+      <a href="publico.html" style="font-size:12px; color:var(--muted); text-decoration:none;">← Voltar ao Site Público</a>
+      <a href="admin.html" style="font-size:12px; color:var(--muted); text-decoration:none;">Painel Admin →</a>
     </div>
   </div>
 </div>
@@ -205,8 +227,8 @@
       </div>
     </a>
     <div class="header-nav">
-      <a href="publico.html" class="nav-link">Site</a>
-      <a href="admin.html" class="nav-link">Painel</a>
+      <a href="publico.html" class="nav-link">Site Público</a>
+      <a href="admin.html" class="nav-link">Painel Admin</a>
       <button class="btn-sair" onclick="sair()">Sair</button>
     </div>
   </header>
@@ -218,7 +240,7 @@
         <div class="foto-wrap">
           <img id="foto-img" src="logo.jpg" alt="Foto">
           <label class="foto-btn" title="Alterar foto de perfil">
-            📸
+            📷
             <input type="file" accept="image/*" onchange="enviarFoto(event)">
           </label>
         </div>
@@ -236,7 +258,7 @@
           <div class="label">O teu código de acesso</div>
           <div class="valor" id="p-codigo-badge">••••</div>
         </div>
-        <button class="btn-copy" type="button" onclick="copiarCodigoBadge()">Copiar</button>
+        <button class="btn-copy" type="button" onclick="copiarCodigoBadge()">📋 Copiar</button>
       </div>
     </div>
 
@@ -262,7 +284,7 @@
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <input id="def-codigo" maxlength="7" placeholder="ex: gol88" style="flex:1; min-width:140px; font-family:monospace; font-weight:700;">
           <button class="secondary" type="button" onclick="gerarNovoCodigo()" title="Gera um código aleatório">
-            Gerar novo
+            🎲 Gerar novo
           </button>
           <button class="secondary" id="btn-guardar-codigo" onclick="guardarCodigo()" style="white-space:nowrap; background:var(--navy); color:#fff;">
             Guardar código
@@ -336,36 +358,77 @@
       </div>
     </div>
 
-    <!-- EQUIPAMENTO -->
+    <!-- SITUAÇÃO FINANCEIRA & QUOTAS -->
     <div class="card">
-      <h2>Equipamento</h2>
+      <h2>Situação Financeira & Quotas Mensais</h2>
+      
+      <!-- Caixa de Resumo de Saldo -->
+      <div id="status-financeiro-box" class="status-box emdia">
+        <div>
+          <b id="status-financeiro-titulo" style="font-size:14px;">Situação Regularizada</b>
+          <div id="status-financeiro-detalhe" style="font-size:12px; margin-top:2px;">Todas as quotas e pagamentos estão em dia.</div>
+        </div>
+        <div id="status-financeiro-valor" style="font-size:18px; font-weight:800;">0 Kz</div>
+      </div>
+
+      <!-- Tabela de Quotas da Época -->
+      <h3 style="font-size:13px; text-transform:uppercase; color:var(--muted); margin:12px 0 6px;">Quotas da Época Desportiva (2026/2027)</h3>
       <div class="tablewrap">
         <table>
           <thead>
-            <tr><th>Tamanho</th><th>Nº Camisola</th><th>Estado</th></tr>
+            <tr>
+              <th>Mês de Referência</th>
+              <th>Valor Base</th>
+              <th>Estado do Pagamento</th>
+            </tr>
           </thead>
-          <tbody id="equip-tbody">
-            <tr><td colspan="3" class="vazio">A carregar equipamento...</td></tr>
+          <tbody id="quotas-tbody">
+            <tr><td colspan="3" class="vazio">A carregar quotas...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- PAGAMENTOS -->
+    <!-- EQUIPAMENTOS DO ATLETA -->
     <div class="card">
-      <h2>Pagamentos do Equipamento</h2>
+      <h2>Os Meus Equipamentos</h2>
       <div class="tablewrap">
         <table>
           <thead>
-            <tr><th>Data</th><th>Valor</th></tr>
+            <tr>
+              <th>Equipamento</th>
+              <th>Tamanho / Nº</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="equip-tbody">
+            <tr><td colspan="3" class="vazio">A carregar equipamentos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- HISTÓRICO DE PAGAMENTOS -->
+    <div class="card">
+      <h2>Histórico dos Meus Pagamentos</h2>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Tipo</th>
+              <th>Referência / Detalhe</th>
+              <th>Valor</th>
+              <th>Comprovativo</th>
+            </tr>
           </thead>
           <tbody id="pag-tbody">
-            <tr><td colspan="2" class="vazio">A carregar pagamentos...</td></tr>
+            <tr><td colspan="5" class="vazio">A carregar pagamentos...</td></tr>
           </tbody>
         </table>
       </div>
       <div style="margin-top:12px; text-align:right; font-size:13px;">
-        Total pago: <b id="pag-total" style="color:var(--navy); font-size:15px;">0 Kz</b>
+        Total liquidado até ao momento: <b id="pag-total" style="color:var(--navy); font-size:15px;">0 Kz</b>
       </div>
     </div>
 
@@ -498,7 +561,7 @@ async function fazerLogin(){
     msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
-    btn.innerHTML = '<span>Entrar no Perfil</span>';
+    btn.innerHTML = '<span>🔒 Entrar no Perfil</span>';
   }
 }
 
@@ -542,7 +605,7 @@ function atualizarDadosPerfil(){
   document.getElementById('p-nome').textContent = jogador.nome || 'Atleta';
   document.getElementById('p-posicao').textContent = (jogador.posicao || 'Posição a definir') + (jogador.numero_camisola ? ' · Camisola nº ' + jogador.numero_camisola : '');
   const contactoEl = document.getElementById('p-contacto');
-  if(contactoEl) contactoEl.textContent = jogador.contacto ? '' + jogador.contacto : '';
+  if(contactoEl) contactoEl.textContent = jogador.contacto ? '📞 ' + jogador.contacto : '';
   
   const fotoEl = document.getElementById('foto-img');
   if(fotoEl){
@@ -578,7 +641,7 @@ function copiarCodigoBadge(){
     const btn = document.querySelector('.btn-copy');
     if(btn){
       const original = btn.textContent;
-      btn.textContent = 'Copiado!';
+      btn.textContent = '✓ Copiado!';
       setTimeout(()=>{ btn.textContent = original; }, 2000);
     }
   }).catch(()=>{});
@@ -649,7 +712,7 @@ async function sugerirJogo(){
       return;
     }
 
-    msg.textContent = 'Sugestão enviada com sucesso! A direção irá analisar.';
+    msg.textContent = '✓ Sugestão enviada com sucesso! A direção irá analisar.';
     msg.className = 'msg-box ok';
 
     document.getElementById('s-adversario').value = '';
@@ -663,7 +726,7 @@ async function sugerirJogo(){
     msg.className = 'msg-box err';
   }finally{
     btn.disabled = false;
-    btn.innerHTML = '<span>Sugerir jogo à Direção</span>';
+    btn.innerHTML = '<span>⚽ Sugerir jogo à Direção</span>';
   }
 }
 
@@ -702,7 +765,7 @@ async function mudarNome(){
     document.getElementById('p-nome').textContent = novoNome;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    msg.textContent = 'Nome atualizado com sucesso!';
+    msg.textContent = '✓ Nome atualizado com sucesso!';
     msg.className = 'msg-box ok';
     setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className='msg-box'; }, 3500);
   }catch(e){
@@ -808,7 +871,7 @@ async function guardarCodigo(){
     document.getElementById('p-codigo-badge').textContent = novoCodigo;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    msg.textContent = `Novo código "${novoCodigo}" guardado com sucesso! Já o podes usar para entrar.`;
+    msg.textContent = `✓ Novo código "${novoCodigo}" guardado com sucesso! Já o podes usar para entrar.`;
     msg.className = 'msg-box ok';
     setTimeout(()=>{ if(msg.textContent.includes('sucesso')) msg.textContent = ''; msg.className='msg-box'; }, 5000);
   }catch(e){
@@ -845,7 +908,7 @@ async function enviarFoto(e){
     document.getElementById('foto-img').src = fotoUrl;
     try{ localStorage.setItem('fcnv_jogador', JSON.stringify(jogador)); }catch(e){}
 
-    msg.textContent = 'Foto atualizada!';
+    msg.textContent = '✓ Foto atualizada!';
     msg.className = 'msg-box ok';
     setTimeout(()=>{ msg.textContent = ''; msg.className = 'msg-box'; }, 3000);
   }catch(err){
@@ -854,39 +917,186 @@ async function enviarFoto(e){
   }
 }
 
-// ---- EQUIPAMENTO ----
+// ---- EQUIPAMENTO & TESOURARIA DO ATLETA ----
+const MESES_EPOCA = [
+  { id: '2026-11', nome: 'Novembro 2026', curto: 'Nov 2026' },
+  { id: '2026-12', nome: 'Dezembro 2026', curto: 'Dez 2026' },
+  { id: '2027-01', nome: 'Janeiro 2027', curto: 'Jan 2027' },
+  { id: '2027-02', nome: 'Fevereiro 2027', curto: 'Fev 2027' },
+  { id: '2027-03', nome: 'Março 2027', curto: 'Mar 2027' },
+  { id: '2027-04', nome: 'Abril 2027', curto: 'Abr 2027' },
+  { id: '2027-05', nome: 'Maio 2027', curto: 'Mai 2027' }
+];
+
+let valorQuotaMensal = parseInt(localStorage.getItem('fcnv_quota_valor') || '1000', 10);
+
 async function carregarEquipamento(){
   if(!jogador) return;
-  const { data } = await sb.from('pedidos_equipamento').select('*').eq('jogador_id', jogador.id);
+  const { data } = await sb.from('pedidos_equipamento').select('*').eq('jogador_id', jogador.id).order('created_at', {ascending:false});
   const tbody = document.getElementById('equip-tbody');
   if(!data || data.length === 0){
-    tbody.innerHTML = '<tr><td colspan="3" class="vazio">Sem pedido de equipamento registado.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3" class="vazio">Sem pedidos de equipamento registados para este atleta.</td></tr>';
     return;
   }
-  tbody.innerHTML = data.map(e => `
-    <tr>
-      <td><b>${e.tamanho || '—'}</b></td>
-      <td>${e.numero || '—'}</td>
-      <td><span class="badge badge-confirmado">${e.estado || 'registado'}</span></td>
-    </tr>`
-  ).join('');
+  tbody.innerHTML = data.map(e => {
+    let badgeClass = 'badge-pendente';
+    let estadoTexto = 'Pedido Registado';
+    if(e.estado === 'pago'){
+      badgeClass = 'badge-emdia';
+      estadoTexto = 'Liquidado / Pago';
+    } else if(e.estado === 'entregue'){
+      badgeClass = 'badge-equip';
+      estadoTexto = 'Entregue';
+    }
+
+    return `
+      <tr>
+        <td><b>Equipamento Oficial</b></td>
+        <td>${e.tamanho || '—'} / ${e.numero ? '#' + e.numero : '—'}</td>
+        <td><span class="badge ${badgeClass}">${estadoTexto}</span></td>
+      </tr>
+    `;
+  }).join('');
 }
 
-// ---- PAGAMENTOS ----
+// ---- PAGAMENTOS & QUOTAS ----
 async function carregarPagamentos(){
   if(!jogador) return;
-  const { data } = await sb.from('pagamentos').select('*').eq('jogador_id', jogador.id).order('data_pagamento', {ascending:false});
-  const tbody = document.getElementById('pag-tbody');
-  if(!data || data.length === 0){
-    tbody.innerHTML = '<tr><td colspan="2" class="vazio">Ainda sem pagamentos registados.</td></tr>';
+  const { data: pagamentos } = await sb.from('pagamentos').select('*').eq('jogador_id', jogador.id).order('data_pagamento', {ascending:false});
+  const { data: equipamentos } = await sb.from('pedidos_equipamento').select('*').eq('jogador_id', jogador.id);
+
+  const listaPag = pagamentos || [];
+  const listaEquip = equipamentos || [];
+
+  // 1. Tabela de Histórico de Pagamentos
+  const tbodyPag = document.getElementById('pag-tbody');
+  if(!listaPag || listaPag.length === 0){
+    tbodyPag.innerHTML = '<tr><td colspan="5" class="vazio">Ainda sem pagamentos registados na tua conta.</td></tr>';
     document.getElementById('pag-total').textContent = '0 Kz';
-    return;
+  } else {
+    tbodyPag.innerHTML = listaPag.map(p => {
+      const tipo = p.tipo || 'quota';
+      let tipoBadge = '<span class="badge badge-quota">Quota</span>';
+      let detalhe = p.mes_referencia || 'Quota Mensal';
+      
+      if(tipo === 'quota' && p.mes_referencia){
+        const mesObj = MESES_EPOCA.find(m => m.id === p.mes_referencia);
+        detalhe = mesObj ? mesObj.nome : p.mes_referencia;
+      } else if(tipo === 'equipamento'){
+        tipoBadge = '<span class="badge badge-equip">Equipamento</span>';
+        detalhe = p.item_equipamento || 'Equipamento do Clube';
+      } else if(tipo === 'outro'){
+        tipoBadge = '<span class="badge badge-outro">Outro</span>';
+        detalhe = p.observacoes || 'Pagamento Diverso';
+      }
+
+      if(p.observacoes && tipo !== 'outro'){
+        detalhe += ` <span style="font-size:11px; color:var(--muted); display:block;">Nota: ${p.observacoes}</span>`;
+      }
+
+      const compLink = p.comprovativo_url ? `<a href="${p.comprovativo_url}" target="_blank" style="color:var(--navy); font-weight:600;">Ver comprovativo</a>` : '—';
+
+      return `
+        <tr>
+          <td>${p.data_pagamento || '—'}</td>
+          <td>${tipoBadge}</td>
+          <td>${detalhe}</td>
+          <td><b>${Number(p.valor||0).toLocaleString('pt-PT')} Kz</b></td>
+          <td>${compLink}</td>
+        </tr>
+      `;
+    }).join('');
+
+    const total = listaPag.reduce((s,p)=>s+Number(p.valor||0), 0);
+    document.getElementById('pag-total').textContent = total.toLocaleString('pt-PT') + ' Kz';
   }
-  tbody.innerHTML = data.map(p =>
-    `<tr><td>${p.data_pagamento}</td><td><b>${Number(p.valor||0).toLocaleString('pt-PT')} Kz</b></td></tr>`
-  ).join('');
-  const total = data.reduce((s,p)=>s+Number(p.valor||0), 0);
-  document.getElementById('pag-total').textContent = total.toLocaleString('pt-PT') + ' Kz';
+
+  // 2. Análise de Quotas e Situação Financeira (Início a 30 de Novembro de 2026)
+  const hoje = new Date().toISOString().slice(0, 10);
+  const mesesPagos = listaPag
+    .filter(p => (p.tipo === 'quota' || !p.tipo) && p.mes_referencia)
+    .map(p => p.mes_referencia);
+
+  const mesesAtivos = [];
+  if(hoje >= '2026-11-30'){
+    mesesAtivos.push(MESES_EPOCA.find(m => m.id === '2026-11'));
+  }
+  if(hoje >= '2026-12-30'){
+    mesesAtivos.push(MESES_EPOCA.find(m => m.id === '2026-12'));
+  }
+  if(hoje >= '2027-01-30'){
+    mesesAtivos.push(MESES_EPOCA.find(m => m.id === '2027-01'));
+  }
+  const mesesExigiveis = mesesAtivos.filter(Boolean);
+
+  const quotasEmFalta = mesesExigiveis.filter(m => !mesesPagos.includes(m.id));
+  const dividaQuotas = quotasEmFalta.length * valorQuotaMensal;
+
+  const equipsEmFalta = listaEquip.filter(e => e.estado !== 'pago');
+  const dividaEquip = equipsEmFalta.reduce((s, e) => s + Number(e.valor || 5000), 0);
+
+  const saldoDevedor = dividaQuotas + dividaEquip;
+
+  // Atualiza caixa de resumo de saldo
+  const boxStatus = document.getElementById('status-financeiro-box');
+  const titStatus = document.getElementById('status-financeiro-titulo');
+  const detStatus = document.getElementById('status-financeiro-detalhe');
+  const valStatus = document.getElementById('status-financeiro-valor');
+
+  if(boxStatus && titStatus && detStatus && valStatus){
+    if(saldoDevedor === 0){
+      boxStatus.className = 'status-box emdia';
+      titStatus.textContent = 'Situação Regularizada';
+      if(hoje < '2026-11-30'){
+        detStatus.textContent = 'Sem pendências de pagamento. A cobrança de quotas mensais (1.000 Kz) terá início a 30 de Novembro de 2026.';
+      } else {
+        detStatus.textContent = 'Todas as quotas e equipamentos encontram-se 100% liquidados.';
+      }
+      valStatus.textContent = '0 Kz';
+      valStatus.style.color = 'var(--success)';
+    } else {
+      boxStatus.className = 'status-box devedor';
+      titStatus.textContent = 'Situação Pendente / Saldo Devedor';
+      
+      const partesDet = [];
+      if(dividaQuotas > 0) partesDet.push(`${quotasEmFalta.length} quota(s) em atraso (${dividaQuotas.toLocaleString('pt-PT')} Kz)`);
+      if(dividaEquip > 0) partesDet.push(`${equipsEmFalta.length} equipamento(s) por liquidar (${dividaEquip.toLocaleString('pt-PT')} Kz)`);
+      
+      detStatus.textContent = partesDet.join(' · ');
+      valStatus.textContent = Number(saldoDevedor).toLocaleString('pt-PT') + ' Kz';
+      valStatus.style.color = 'var(--danger)';
+    }
+  }
+
+  // Tabela de Quotas
+  const tbodyQuotas = document.getElementById('quotas-tbody');
+  if(tbodyQuotas){
+    tbodyQuotas.innerHTML = MESES_EPOCA.map(m => {
+      const isPago = mesesPagos.includes(m.id);
+      const pagObj = listaPag.find(p => (p.tipo === 'quota' || !p.tipo) && p.mes_referencia === m.id);
+      const dataPag = pagObj ? ` (a ${pagObj.data_pagamento})` : '';
+
+      let badgeHtml = '';
+      if(isPago){
+        badgeHtml = `<span class="badge badge-emdia">Liquidado${dataPag}</span>`;
+      } else if(hoje < '2026-11-30'){
+        badgeHtml = `<span class="badge badge-emdia">Início a 30/11/2026</span>`;
+      } else {
+        const isExigivel = mesesExigiveis.some(ex => ex && ex.id === m.id);
+        badgeHtml = isExigivel 
+          ? `<span class="badge badge-devedor">Por Liquidar</span>`
+          : `<span class="badge badge-pendente">A Aguardar Mês</span>`;
+      }
+
+      return `
+        <tr>
+          <td><b>${m.nome}</b></td>
+          <td>${valorQuotaMensal.toLocaleString('pt-PT')} Kz</td>
+          <td>${badgeHtml}</td>
+        </tr>
+      `;
+    }).join('');
+  }
 }
 
 // ---- JOGOS & SUGESTÕES ----
@@ -939,7 +1149,7 @@ async function carregarJogos(){
         <td>${j.hora ? j.hora.slice(0,5) : '—'}</td>
         <td>
           vs ${advInfo.nome}
-          ${advInfo.contacto ? `<br><a href="tel:${telLimpo}" class="rep-contact"> Rep: ${advInfo.contacto}</a>` : ''}
+          ${advInfo.contacto ? `<br><a href="tel:${telLimpo}" class="rep-contact">📞 Rep: ${advInfo.contacto}</a>` : ''}
         </td>
         <td>${j.local || '—'}</td>
         <td><span class="badge badge-pendente">A aguardar aprovação</span></td>

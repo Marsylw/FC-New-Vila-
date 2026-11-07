@@ -83,15 +83,15 @@
   th{color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.03em;}
   .tablewrap{overflow-x:auto;}
 
-  .badge{display:inline-block; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:700; text-transform:uppercase;}
-  .badge.vitoria{background:var(--green-bg); color:var(--success);}
-  .badge.derrota{background:var(--red-bg); color:var(--danger);}
-  .badge.empate{background:var(--amber-bg); color:#8a6d00;}
-  .badge.confirmado{background:var(--green-bg); color:var(--success);}
-  .badge.pendente{background:var(--amber-bg); color:#8a6d00;}
-  .badge.pedido{background:#eee; color:#666;}
-  .badge.pago{background:var(--amber-bg); color:#8a6d00;}
-  .badge.entregue{background:var(--green-bg); color:var(--success);}
+  .badge{display:inline-block; padding:4px 9px; border-radius:6px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.03em;}
+  .badge.vitoria{background:#15803d; color:#ffffff;}
+  .badge.derrota{background:#b91c1c; color:#ffffff;}
+  .badge.empate{background:#b45309; color:#ffffff;}
+  .badge.confirmado{background:#1e40af; color:#ffffff;}
+  .badge.pendente{background:#475569; color:#ffffff;}
+  .badge.pedido{background:#64748b; color:#ffffff;}
+  .badge.pago{background:#15803d; color:#ffffff;}
+  .badge.entregue{background:#0e7490; color:#ffffff;}
 
   .codigo{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-weight:700; letter-spacing:1px; color:var(--navy); background:var(--gold-light); padding:2px 6px; border-radius:4px;}
   :root[data-theme="dark"] .codigo, @media (prefers-color-scheme:dark){ .codigo{color:var(--gold);} }
@@ -110,9 +110,17 @@
   .rep-contact{display:inline-flex; align-items:center; gap:3px; font-size:11px; color:#1d4ed8; font-weight:600; text-decoration:none;}
   .rep-contact:hover{text-decoration:underline;}
 
-  .score-badge{font-size:14px; font-weight:800; color:var(--navy); display:block;}
-  :root[data-theme="dark"] .score-badge, @media (prefers-color-scheme:dark){ .score-badge{color:var(--gold);} }
-  .scorers-note{font-size:11px; color:var(--muted); display:block;}
+  .score-badge{
+    font-size:15px; font-weight:800; color:#0e1d3a; background:#e2e8f0; border:1px solid #cbd5e1;
+    padding:3px 8px; border-radius:6px; display:inline-block; margin-top:4px;
+  }
+  :root[data-theme="dark"] .score-badge, @media (prefers-color-scheme:dark){
+    .score-badge{ color:#ffffff; background:#0f172a; border-color:#475569; }
+  }
+  .scorers-note{font-size:12px; color:#1e293b; display:block; margin-top:4px; font-weight:600;}
+  :root[data-theme="dark"] .scorers-note, @media (prefers-color-scheme:dark){
+    .scorers-note{ color:#f1f5f9; }
+  }
 
   #msg{font-size:13px; margin-bottom:12px; padding:0; border-radius:6px; min-height:0;}
   #msg.err{color:var(--danger); background:#fdf2f2; padding:10px 14px; font-weight:600;}
@@ -141,6 +149,76 @@
   .modal-header h3{margin:0; font-size:16px; font-weight:700;}
   .modal-close{background:none; border:none; font-size:18px; cursor:pointer; color:var(--muted);}
   .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:18px; padding-top:14px; border-top:1px solid var(--border);}
+
+  /* MARCADORES E CONTADOR DE GOLOS */
+  .marcador-row{
+    display:flex; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--border);
+    border-radius:8px; padding:6px 10px;
+    transition:border-color 0.15s ease;
+  }
+  .marcador-row:hover{
+    border-color:var(--gold);
+  }
+  @media (max-width: 480px){
+    .marcador-row{ flex-wrap:wrap; }
+  }
+  .stepper-btn{
+    width:28px; height:28px; border-radius:6px;
+    border:1px solid var(--border); background:rgba(21,42,82,0.06);
+    color:var(--navy); font-weight:800; font-size:15px; line-height:1;
+    display:inline-flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all 0.15s ease; user-select:none;
+  }
+  :root[data-theme="dark"] .stepper-btn, @media (prefers-color-scheme:dark){
+    .stepper-btn{ background:rgba(255,255,255,0.08); color:#fff; }
+  }
+  .stepper-btn:hover{ background:rgba(201,162,39,0.25); border-color:var(--gold); }
+  .stepper-btn:active{ transform:scale(0.92); }
+  .stepper-val{
+    width:44px; text-align:center; font-weight:800; font-size:13px;
+    border:1px solid var(--border); border-radius:6px; padding:5px 2px;
+    background:var(--bg); color:var(--text);
+  }
+
+  /* CARTOES KPI FINANCEIROS */
+  .kpi-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;
+  }
+  .kpi-card{
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:14px 16px; display:flex; flex-direction:column; gap:4px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.03);
+  }
+  .kpi-title{ font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); font-weight:700; }
+  .kpi-value{ font-size:20px; font-weight:800; color:var(--navy); }
+  :root[data-theme="dark"] .kpi-value, @media (prefers-color-scheme:dark){ .kpi-value{ color:var(--gold); } }
+  .kpi-sub{ font-size:11px; color:var(--muted); }
+  
+  .filter-bar{
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px;
+  }
+  .filter-btn{
+    background:var(--card); border:1px solid var(--border); border-radius:6px;
+    padding:6px 12px; font-size:12px; font-weight:600; cursor:pointer; color:var(--muted);
+    transition:all 0.15s ease;
+  }
+  .filter-btn:hover{ border-color:var(--navy); color:var(--text); }
+  .filter-btn.active{ background:var(--navy); color:#fff; border-color:var(--navy); }
+  :root[data-theme="dark"] .filter-btn.active, @media (prefers-color-scheme:dark){
+    background:var(--gold); color:var(--navy-dark); border-color:var(--gold);
+  }
+
+  /* BADGES DE PAGAMENTOS E DEVEDORES */
+  .badge-quota{ background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe; }
+  .badge-equip{ background:#fef3c7; color:#92400e; border:1px solid #fde68a; }
+  .badge-outro{ background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; }
+  .badge-emdia{ background:#dcfce7; color:#166534; border:1px solid #bbf7d0; }
+  .badge-devedor{ background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
+
+  .badge-mes-pago{ background:#dcfce7; color:#166534; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; display:inline-block; margin:1px; }
+  .badge-mes-falta{ background:#fee2e2; color:#991b1b; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; display:inline-block; margin:1px; }
+  .badge-equip-falta{ background:#fef3c7; color:#92400e; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; display:inline-block; margin:1px; }
 
   .hidden{display:none !important;}
 </style>
@@ -173,7 +251,7 @@
   <header>
     <img src="logo.jpg" alt="FC New Vila" class="header-logo" id="admin-header-logo">
     <h1>FC New Vila — Painel de Gestão</h1>
-    <a href="publico.html" class="nav-link">Site</a>
+    <a href="publico.html" class="nav-link">Site Público</a>
     <a href="perfil.html" class="nav-link">Perfil Atleta</a>
     <span class="who" id="who"></span>
     <button class="btn-sair" onclick="sair()">Sair</button>
@@ -183,7 +261,7 @@
     <button data-tab="jogadores" class="active">Plantel / Jogadores</button>
     <button data-tab="jogos">Jogos & Sugestões</button>
     <button data-tab="equipamentos">Equipamentos</button>
-    <button data-tab="pagamentos">Pagamentos</button>
+    <button data-tab="pagamentos">Tesouraria</button>
     <button data-tab="membros">Organização</button>
   </nav>
 
@@ -326,7 +404,7 @@
                 <th>Hora</th>
                 <th>Adversário / Representante</th>
                 <th>Local</th>
-                <th>Resultado </th>
+                <th>Resultado & Score (Quem Marcou)</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -345,7 +423,7 @@
         <div class="row">
           <div>
             <label for="e-jogador">Jogador *</label>
-            <select id="e-jogador"></select>
+            <select id="e-jogador" onchange="aoMudarJogadorEquipamento()"></select>
           </div>
           <div>
             <label for="e-tamanho">Tamanho</label>
@@ -354,6 +432,7 @@
               <option value="M" selected>M</option>
               <option value="L">L</option>
               <option value="XL">XL</option>
+              <option value="XXL">XXL</option>
             </select>
           </div>
           <div>
@@ -361,15 +440,22 @@
             <input id="e-numero" type="number" min="1" max="99" placeholder="ex: 10">
           </div>
         </div>
-        <button class="primary" onclick="addEquipamento()">Registar pedido</button>
+
+        <button class="primary" onclick="addEquipamento()">Registar Pedido de Equipamento</button>
       </div>
 
       <div class="card">
-        <h2>Pedidos de Equipamento</h2>
+        <h2>Lista de Equipamentos Solicitados</h2>
         <div class="tablewrap">
           <table>
             <thead>
-              <tr><th>Jogador</th><th>Tamanho</th><th>Nº</th><th>Estado</th><th>Alterar estado</th></tr>
+              <tr>
+                <th>Jogador</th>
+                <th>Tamanho</th>
+                <th>Número</th>
+                <th>Estado</th>
+                <th>Ações</th>
+              </tr>
             </thead>
             <tbody id="equipamentos-tbody"></tbody>
           </table>
@@ -377,39 +463,167 @@
       </div>
     </section>
 
-    <!-- ABA PAGAMENTOS -->
+    <!-- ABA PAGAMENTOS & TESOURARIA -->
     <section id="tab-pagamentos" class="tab hidden">
-      <div class="card">
-        <h2>Registar Pagamento de Equipamento</h2>
-        <div class="row">
-          <div>
-            <label for="p-jogador">Jogador *</label>
-            <select id="p-jogador"></select>
-          </div>
-          <div>
-            <label for="p-valor">Valor (Kz) *</label>
-            <input id="p-valor" type="number" placeholder="5000">
-          </div>
-          <div>
-            <label for="p-data">Data</label>
-            <input id="p-data" type="date">
-          </div>
+      <!-- PAINEL DE INDICADORES GLOBAIS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-title">Total Arrecadado</span>
+          <span class="kpi-value" id="kpi-total-arrecadado">0 Kz</span>
+          <span class="kpi-sub" id="kpi-qtd-pagamentos">0 pagamentos registados</span>
         </div>
-        <div class="row">
-          <div>
-            <label for="p-comprovativo">URL do comprovativo (opcional)</label>
-            <input id="p-comprovativo" placeholder="https://...">
-          </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Total em Dívida</span>
+          <span class="kpi-value" id="kpi-total-divida" style="color:var(--danger);">0 Kz</span>
+          <span class="kpi-sub" id="kpi-sub-divida">Quotas e materiais pendentes</span>
         </div>
-        <button class="primary" onclick="addPagamento()">Registar pagamento</button>
+        <div class="kpi-card">
+          <span class="kpi-title">Atletas com Dívida</span>
+          <span class="kpi-value" id="kpi-atletas-devedores">0</span>
+          <span class="kpi-sub" id="kpi-sub-atletas">de 0 atletas registados</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Quota Mensal Base</span>
+          <div style="display:flex; align-items:center; gap:6px; margin-top:2px;">
+            <input id="config-valor-quota" type="number" step="500" min="500" value="1000" style="padding:4px 8px; font-weight:700; width:110px;" onchange="atualizarValorBaseQuota(this.value)">
+            <span style="font-weight:700; font-size:13px; color:var(--muted);">Kz/mês</span>
+          </div>
+          <span class="kpi-sub">Cobrança inicia a 30/11/2026</span>
+        </div>
       </div>
 
+      <!-- PAINEL DE CONTROLO DE DEVEDORES -->
       <div class="card">
-        <h2>Histórico de Pagamentos</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; border-bottom:2px solid var(--gold); padding-bottom:8px;">
+          <h2 style="margin:0; border-bottom:none; padding-bottom:0;">Controlo de Devedores & Saldos por Atleta</h2>
+          <span style="font-size:12px; color:var(--muted);" id="devedores-contador-resumo">0 atletas</span>
+        </div>
+
+        <!-- Barra de Filtros e Pesquisa -->
+        <div class="filter-bar">
+          <input id="busca-devedor" type="text" placeholder="Pesquisar atleta por nome..." oninput="filtrarTabelaDevedores()" style="max-width:240px; padding:6px 10px; font-size:13px;">
+          <button type="button" class="filter-btn active" id="f-filtro-todos" onclick="definirFiltroDevedores('todos')">Todos os Atletas</button>
+          <button type="button" class="filter-btn" id="f-filtro-devedores" onclick="definirFiltroDevedores('devedores')">Apenas Devedores</button>
+          <button type="button" class="filter-btn" id="f-filtro-emdia" onclick="definirFiltroDevedores('emdia')">Apenas Regularizados</button>
+        </div>
+
         <div class="tablewrap">
           <table>
             <thead>
-              <tr><th>Data</th><th>Jogador</th><th>Valor</th><th>Comprovativo</th></tr>
+              <tr>
+                <th>Atleta</th>
+                <th>Quotas em Falta</th>
+                <th>Equipamentos em Falta</th>
+                <th>Saldo Devedor Total</th>
+                <th>Situação</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="devedores-tbody">
+              <tr><td colspan="6" class="vazio">A carregar dados de devedores...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REGISTAR NOVO PAGAMENTO -->
+      <div class="card" id="card-registar-pagamento">
+        <h2>Registar Pagamento (Quota ou Equipamento)</h2>
+        <div class="row">
+          <div>
+            <label for="p-jogador">Jogador *</label>
+            <select id="p-jogador" onchange="aoMudarJogadorPagamento()"></select>
+          </div>
+          <div>
+            <label for="p-tipo">Tipo de Pagamento *</label>
+            <select id="p-tipo" onchange="aoMudarTipoPagamento()">
+              <option value="quota" selected>Quota Mensal</option>
+              <option value="equipamento">Equipamento / Material</option>
+              <option value="outro">Inscrição / Outro</option>
+            </select>
+          </div>
+          <div>
+            <label for="p-valor">Valor (Kz) *</label>
+            <input id="p-valor" type="number" step="500" placeholder="1000">
+          </div>
+          <div>
+            <label for="p-data">Data do Pagamento *</label>
+            <input id="p-data" type="date">
+          </div>
+        </div>
+
+        <!-- Campos Contextuais para Quota -->
+        <div id="row-campo-quota" class="row" style="margin-top:8px;">
+          <div style="flex:2;">
+            <label for="p-mes-referencia">Mês de Referência da Quota *</label>
+            <select id="p-mes-referencia">
+              <!-- Meses preenchidos dinamicamente por JS -->
+            </select>
+            <small style="font-size:11px; color:var(--muted); display:block; margin-top:2px;">
+              Mês da época desportiva ao qual esta quota corresponde.
+            </small>
+          </div>
+        </div>
+
+        <!-- Campos Contextuais para Equipamento -->
+        <div id="row-campo-equipamento" class="row hidden" style="margin-top:8px;">
+          <div style="flex:2;">
+            <label for="p-item-equipamento">Equipamento a Liquidar *</label>
+            <select id="p-item-equipamento" onchange="aoSelecionarItemEquipamentoPagamento()">
+              <!-- Preenchido dinamicamente com pedidos pendentes do jogador -->
+            </select>
+            <small style="font-size:11px; color:var(--muted); display:block; margin-top:2px;">
+              Seleciona o pedido pendente do atleta para liquidar a dívida do equipamento.
+            </small>
+          </div>
+        </div>
+
+        <!-- Campos Contextuais para Outro -->
+        <div id="row-campo-outro" class="row hidden" style="margin-top:8px;">
+          <div style="flex:2;">
+            <label for="p-descricao-outro">Descrição / Motivo do Pagamento</label>
+            <input id="p-descricao-outro" placeholder="ex: Inscrição em torneio, comparticipação de deslocação...">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:8px;">
+          <div style="flex:1;">
+            <label for="p-comprovativo">URL do Comprovativo (opcional)</label>
+            <input id="p-comprovativo" placeholder="https://...">
+          </div>
+          <div style="flex:1;">
+            <label for="p-observacoes">Observações / Notas (opcional)</label>
+            <input id="p-observacoes" placeholder="ex: Transferência via Multicaixa Express, entregue em mão...">
+          </div>
+        </div>
+
+        <button class="primary" onclick="addPagamento()">Guardar Pagamento</button>
+      </div>
+
+      <!-- HISTÓRICO DE PAGAMENTOS -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; border-bottom:2px solid var(--gold); padding-bottom:8px;">
+          <h2 style="margin:0; border-bottom:none; padding-bottom:0;">Histórico de Transações & Pagamentos</h2>
+          <div class="filter-bar" style="margin-bottom:0;">
+            <button type="button" class="filter-btn active" id="f-hist-todos" onclick="filtrarHistoricoPagamentos('todos')">Todos</button>
+            <button type="button" class="filter-btn" id="f-hist-quota" onclick="filtrarHistoricoPagamentos('quota')">Quotas</button>
+            <button type="button" class="filter-btn" id="f-hist-equip" onclick="filtrarHistoricoPagamentos('equipamento')">Equipamentos</button>
+            <button type="button" class="filter-btn" id="f-hist-outro" onclick="filtrarHistoricoPagamentos('outro')">Outros</button>
+          </div>
+        </div>
+
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Jogador</th>
+                <th>Tipo</th>
+                <th>Referência / Detalhe</th>
+                <th>Valor</th>
+                <th>Comprovativo</th>
+                <th>Ações</th>
+              </tr>
             </thead>
             <tbody id="pagamentos-tbody"></tbody>
           </table>
@@ -481,7 +695,7 @@
       <label for="edit-j-codigo">Código Pessoal de Acesso (máx. 7 caracteres)</label>
       <div style="display:flex; gap:8px;">
         <input id="edit-j-codigo" maxlength="7" style="font-family:monospace; font-weight:700;">
-        <button type="button" class="mini-btn secondary" onclick="adminModalGerarCodigo()" style="white-space:nowrap;">Gerar outro</button>
+        <button type="button" class="mini-btn secondary" onclick="adminModalGerarCodigo()" style="white-space:nowrap;">Gerar outro código</button>
       </div>
       <small style="font-size:11px; color:var(--muted); display:block; margin-top:4px;">
         Código que o atleta usa para entrar no perfil (< 8 caracteres).
@@ -497,15 +711,26 @@
 
 <!-- MODAL: REGISTAR / EDITAR RESULTADO, SCORE E MARCADORES DO JOGO -->
 <div id="modal-resultado-jogo" class="modal-backdrop hidden">
-  <div class="modal-card">
+  <div class="modal-card" style="max-width:540px;">
     <div class="modal-header">
-      <h3 id="res-modal-titulo">Resultado</h3>
+      <h3 id="res-modal-titulo">Resultado & Placar do Jogo</h3>
       <button class="modal-close" onclick="fecharModalResultado()">✕</button>
     </div>
     
     <input type="hidden" id="res-j-id">
 
-    <div class="form-group" style="margin-bottom:12px;">
+    <div class="row">
+      <div>
+        <label for="res-golos-favor">Golos FC New Vila</label>
+        <input id="res-golos-favor" type="number" min="0" placeholder="ex: 3" oninput="autoSugerirDesfecho()">
+      </div>
+      <div>
+        <label for="res-golos-contra">Golos Adversário</label>
+        <input id="res-golos-contra" type="number" min="0" placeholder="ex: 1" oninput="autoSugerirDesfecho()">
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top:10px;">
       <label for="res-desfecho">Desfecho do Jogo *</label>
       <select id="res-desfecho">
         <option value="">Selecionar desfecho...</option>
@@ -515,22 +740,46 @@
       </select>
     </div>
 
-    <div class="row">
-      <div>
-        <label for="res-golos-favor">Golos FC New Vila</label>
-        <input id="res-golos-favor" type="number" min="0" placeholder="ex: 3">
+    <!-- SELETOR DINÂMICO DE MARCADORES (MEMBROS DO CLUBE / ATLETAS) -->
+    <div style="margin-top:14px; padding:12px; border:1px solid var(--border); border-radius:10px; background:rgba(21,42,82,0.03);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
+        <div>
+          <span style="font-weight:700; font-size:13px; color:var(--navy);">Quem marcou pelo FC New Vila? (Membros do Clube)</span>
+          <small style="display:block; font-size:11px; color:var(--muted);">Escolhe o atleta/membro e indica quantos golos marcou</small>
+        </div>
+        <button type="button" class="mini-btn" onclick="adicionarLinhaMarcador('', 1)" style="font-size:11px; padding:5px 10px; white-space:nowrap;">
+          + Adicionar Marcador
+        </button>
       </div>
-      <div>
-        <label for="res-golos-contra">Golos Adversário</label>
-        <input id="res-golos-contra" type="number" min="0" placeholder="ex: 1">
+
+      <div id="marcadores-container" style="display:flex; flex-direction:column; gap:8px;">
+        <!-- Linhas geradas dinamicamente via JS -->
+      </div>
+
+      <div id="marcadores-vazio-aviso" style="display:none; font-size:12px; color:var(--muted); text-align:center; padding:10px; background:var(--card); border:1px dashed var(--border); border-radius:6px; margin-top:4px;">
+        Sem marcadores selecionados. Clica no botão acima para adicionar quem marcou os golos do New Vila.
+      </div>
+
+      <!-- Barra de total e sincronização rápida -->
+      <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--border); font-size:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+        <span style="color:var(--muted);">Total de golos dos membros: <b id="total-golos-marcadores" style="color:var(--navy); font-size:13px;">0</b></span>
+        <button type="button" class="mini-btn secondary" id="btn-sync-golos" onclick="aplicarTotalGolosAosFavor()" style="font-size:11px; padding:4px 8px;" title="Atualizar os Golos do FC New Vila no placar com este total">
+          ⚡ Sincronizar com Golos New Vila (<span id="btn-sync-qtd">0</span>)
+        </button>
       </div>
     </div>
 
-    <div class="form-group" style="margin-top:10px;">
-      <label for="res-marcadores">Quem Marcou (Marcadores dos Golos)</label>
+    <!-- CAMPO FORMATADO / TEXTO DOS MARCADORES -->
+    <div class="form-group" style="margin-top:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <label for="res-marcadores">Marcadores Formatados para o Histórico</label>
+        <button type="button" onclick="toggleEditarMarcadoresTexto()" id="btn-toggle-manual" style="background:none; border:none; font-size:11px; color:#1d4ed8; cursor:pointer; text-decoration:underline;">
+          ✏️ Ajustar texto manualmente
+        </button>
+      </div>
       <input id="res-marcadores" placeholder="ex: Marcelo (2), Sousa (1)">
-      <small style="font-size:11px; color:var(--muted); display:block; margin-top:4px;">
-        Indica quem marcou os golos do New Vila.
+      <small style="font-size:11px; color:var(--muted); display:block; margin-top:2px;">
+        Sincronizado automaticamente com os membros selecionados.
       </small>
     </div>
 
@@ -559,6 +808,7 @@ document.getElementById('admin-header-logo').onerror = function(){ this.src = LO
 
 let membro = null;
 let listaJogadoresCache = [];
+let listaMembrosCache = [];
 let listaJogosCache = [];
 
 function showMsg(txt, ok = false){
@@ -691,7 +941,7 @@ async function carregarTudo(){
 function copiarCodigo(cod){
   if(!cod) return;
   navigator.clipboard.writeText(cod).then(()=>{
-    showMsg(`Código "${cod}" copiado para a área de transferência!`, true);
+    showMsg(`✓ Código "${cod}" copiado para a área de transferência!`, true);
   }).catch(()=>{});
 }
 
@@ -714,22 +964,26 @@ async function carregarJogadores(){
       <td><b>${j.nome}</b></td>
       <td>${j.posicao || '—'}</td>
       <td><b>${j.numero_camisola ? '#' + j.numero_camisola : '—'}</b></td>
-      <td>${j.contacto ? `<a href="tel:${j.contacto.replace(/\s+/g,'')}" class="rep-contact">📞 ${j.contacto}</a>` : '—'}</td>
+      <td>${j.contacto ? `<a href="tel:${j.contacto.replace(/\s+/g,'')}" class="rep-contact">Tel: ${j.contacto}</a>` : '—'}</td>
       <td>
         <span class="codigo">${j.codigo_pessoal || '—'}</span>
-        <button class="mini-btn secondary" onclick="copiarCodigo('${j.codigo_pessoal}')" title="Copiar código"></button>
+        <button class="mini-btn secondary" onclick="copiarCodigo('${j.codigo_pessoal}')" title="Copiar código">Copiar</button>
       </td>
       <td>
         <button class="mini-btn" onclick="abrirModalEditarJogador('${j.id}')" title="Editar perfil completo">Editar</button>
-        <a href="perfil.html?codigo=${encodeURIComponent(j.codigo_pessoal || '')}" target="_blank" class="mini-btn secondary" style="text-decoration:none;" title="Ver perfil como atleta">👁️ Ver Perfil</a>
+        <a href="perfil.html?codigo=${encodeURIComponent(j.codigo_pessoal || '')}" target="_blank" class="mini-btn secondary" style="text-decoration:none;" title="Ver perfil como atleta">Ver Perfil</a>
         <button class="mini-btn reject" onclick="eliminarJogador('${j.id}', '${(j.nome||'').replace(/'/g, "\\'")}')" title="Eliminar jogador">✕</button>
       </td>
     </tr>`
   ).join('') : '<tr><td colspan="6" class="vazio">Nenhum jogador registado.</td></tr>';
 
-  const opts = (data || []).map(j => `<option value="${j.id}">${j.nome}</option>`).join('');
+  const opts = (data || []).map(j => `<option value="${j.id}">${j.nome}${j.numero_camisola ? ' (#' + j.numero_camisola + ')' : ''}</option>`).join('');
   document.getElementById('e-jogador').innerHTML = opts;
   document.getElementById('p-jogador').innerHTML = opts;
+  
+  aoMudarJogadorEquipamento();
+  aoMudarJogadorPagamento();
+  recalcularPainelFinanceiro();
 }
 
 async function addJogador(){
@@ -767,7 +1021,7 @@ async function addJogador(){
     return;
   }
 
-  showMsg(`Jogador "${nome}" adicionado com código "${body.codigo_pessoal}".`, true);
+  showMsg(`✓ Jogador "${nome}" adicionado com código "${body.codigo_pessoal}".`, true);
   document.getElementById('j-nome').value = '';
   document.getElementById('j-numero').value = '';
   document.getElementById('j-contacto').value = '';
@@ -779,7 +1033,7 @@ async function eliminarJogador(id, nome){
   if(!confirm(`Tens a certeza que queres eliminar o atleta "${nome}" do plantel?`)) return;
   const { error } = await sb.from('jogadores').delete().eq('id', id);
   if(error){ showMsg('Erro ao eliminar: ' + error.message); return; }
-  showMsg(`Atleta "${nome}" eliminado com sucesso.`, true);
+  showMsg(`✓ Atleta "${nome}" eliminado com sucesso.`, true);
   carregarJogadores();
 }
 
@@ -847,7 +1101,7 @@ async function salvarEdicaoJogador(){
   const { error } = await sb.from('jogadores').update(updates).eq('id', id);
   if(error){ showMsg('Erro ao atualizar: ' + error.message); return; }
 
-  showMsg(`Perfil do atleta "${nome}" atualizado com sucesso!`, true);
+  showMsg(`✓ Perfil do atleta "${nome}" atualizado com sucesso!`, true);
   fecharModalJogador();
   carregarJogadores();
 }
@@ -873,8 +1127,8 @@ async function carregarJogos(){
             <td>${j.local || '—'}</td>
             <td><span style="color:var(--navy); font-weight:700;">${j.jogadores?.nome || 'Atleta'}</span></td>
             <td>
-              <button class="mini-btn" onclick="confirmarJogo('${j.id}')">Confirmar</button>
-              <button class="mini-btn reject" onclick="rejeitarJogo('${j.id}')">Rejeitar</button>
+              <button class="mini-btn" onclick="confirmarJogo('${j.id}')">✓ Confirmar</button>
+              <button class="mini-btn reject" onclick="rejeitarJogo('${j.id}')">✕ Rejeitar</button>
             </td>
           </tr>
         `;
@@ -910,11 +1164,11 @@ async function carregarJogos(){
           ${j.resultado_estado ? `<span class="${badgeClass}">${RESULTADOS[j.resultado_estado]}</span>` : '<span class="badge pendente">Por disputar</span>'}
           ${det.placar ? `<span class="score-badge">${det.placar}</span>` : ''}
           ${det.marcadores ? `<span class="scorers-note">⚽ ${det.marcadores.replace(/^golos:?/i,'').trim()}</span>` : ''}
-          ${det.resumo ? `<span class="scorers-note" style="font-style:italic;"> ${det.resumo}</span>` : ''}
+          ${det.resumo ? `<span class="scorers-note" style="font-style:italic;">📝 ${det.resumo}</span>` : ''}
         </td>
         <td>
           <button class="mini-btn" onclick="abrirModalResultado('${j.id}')" title="Registar ou editar score e quem marcou">
-             Registar Placar / Marcadores
+            ⚽ Registar Placar / Marcadores
           </button>
           <button class="mini-btn reject" onclick="eliminarJogo('${j.id}')" title="Remover jogo">✕</button>
         </td>
@@ -954,7 +1208,7 @@ async function addJogo(){
     else { showMsg('Erro ao marcar jogo: ' + error.message); }
     return;
   }
-  showMsg('Jogo marcado e confirmado com sucesso!', true);
+  showMsg('✓ Jogo marcado e confirmado com sucesso!', true);
   document.getElementById('g-adversario').value = '';
   document.getElementById('g-rep-contacto').value = '';
   document.getElementById('g-local').value = '';
@@ -968,7 +1222,7 @@ async function confirmarJogo(id){
     else { showMsg(error.message); }
     return;
   }
-  showMsg('Sugestão aprovada e jogo confirmado.', true);
+  showMsg('✓ Sugestão aprovada e jogo confirmado.', true);
   carregarJogos();
 }
 
@@ -976,7 +1230,7 @@ async function rejeitarJogo(id){
   if(!confirm('Tens a certeza que queres rejeitar esta sugestão?')) return;
   const { error } = await sb.from('jogos').delete().eq('id', id);
   if(error){ showMsg(error.message); return; }
-  showMsg('Sugestão rejeitada e removida.', true);
+  showMsg('✓ Sugestão rejeitada e removida.', true);
   carregarJogos();
 }
 
@@ -984,14 +1238,247 @@ async function eliminarJogo(id){
   if(!confirm('Tens a certeza que queres eliminar este jogo agendado?')) return;
   const { error } = await sb.from('jogos').delete().eq('id', id);
   if(error){ showMsg(error.message); return; }
-  showMsg('Jogo removido com sucesso.', true);
+  showMsg('✓ Jogo removido com sucesso.', true);
   carregarJogos();
 }
 
-// Modal Resultado & Score
-function abrirModalResultado(id){
+// Modal Resultado & Score com Seleção de Marcadores do Clube
+function gerarOpcoesMarcadores(selectedNome = ''){
+  let html = '<option value="">-- Escolher Membro / Atleta --</option>';
+  const selNorm = (selectedNome || '').toLowerCase().trim();
+
+  // 1. Plantel de Atletas (jogadores)
+  if(listaJogadoresCache && listaJogadoresCache.length > 0){
+    html += '<optgroup label="Plantel de Atletas (FC New Vila)">';
+    listaJogadoresCache.forEach(j => {
+      const numStr = j.numero_camisola ? ` (#${j.numero_camisola})` : '';
+      const posStr = j.posicao ? ` · ${j.posicao}` : '';
+      const label = `${j.nome}${numStr}${posStr}`;
+      const isSel = selNorm && selNorm === (j.nome||'').toLowerCase().trim() ? 'selected' : '';
+      html += `<option value="${j.nome.replace(/"/g, '&quot;')}" ${isSel}>${label}</option>`;
+    });
+    html += '</optgroup>';
+  }
+
+  // 2. Outros Membros do Clube (membros)
+  if(listaMembrosCache && listaMembrosCache.length > 0){
+    const nomesJog = new Set((listaJogadoresCache||[]).map(x => (x.nome||'').toLowerCase().trim()));
+    const outros = listaMembrosCache.filter(m => m.nome && !nomesJog.has((m.nome||'').toLowerCase().trim()));
+    if(outros.length > 0){
+      html += '<optgroup label="Outros Membros do Clube">';
+      outros.forEach(m => {
+        const funcStr = m.funcao ? ` (${m.funcao})` : '';
+        const label = `${m.nome}${funcStr}`;
+        const isSel = selNorm && selNorm === (m.nome||'').toLowerCase().trim() ? 'selected' : '';
+        html += `<option value="${m.nome.replace(/"/g, '&quot;')}" ${isSel}>${label}</option>`;
+      });
+      html += '</optgroup>';
+    }
+  }
+
+  // 3. Opções especiais
+  html += '<optgroup label="Especial / Outro">';
+  const isAutogolo = selNorm && (selNorm.includes('autogolo') || selNorm === 'autogolo adversário') ? 'selected' : '';
+  const isOutro = selectedNome === '__outro__' ? 'selected' : '';
+  html += `<option value="Autogolo Adversário" ${isAutogolo}>⚡ Autogolo do Adversário</option>`;
+  html += `<option value="__outro__" ${isOutro}>✍️ Outro Marcador (digitar nome...)</option>`;
+  html += '</optgroup>';
+
+  return html;
+}
+
+function adicionarLinhaMarcador(nomeInicial = '', golosIniciais = 1){
+  const container = document.getElementById('marcadores-container');
+  if(!container) return;
+
+  const row = document.createElement('div');
+  row.className = 'marcador-row';
+
+  // Verifica se nomeInicial corresponde a um membro conhecido ou se é personalizado
+  let isCustom = false;
+  if(nomeInicial){
+    const norm = nomeInicial.toLowerCase().trim();
+    const todosNomes = [
+      ...(listaJogadoresCache || []).map(j => (j.nome||'').toLowerCase().trim()),
+      ...(listaMembrosCache || []).map(m => (m.nome||'').toLowerCase().trim()),
+      'autogolo adversário',
+      'autogolo do adversário'
+    ];
+    if(!todosNomes.includes(norm)){
+      isCustom = true;
+    }
+  }
+
+  const selectVal = isCustom ? '__outro__' : (nomeInicial || '');
+
+  row.innerHTML = `
+    <div style="flex:1; min-width:180px; display:flex; flex-direction:column; gap:4px;">
+      <select class="marcador-select" onchange="aoSelecionarMembro(this)" style="width:100%; font-size:13px; padding:6px 8px;">
+        ${gerarOpcoesMarcadores(selectVal)}
+      </select>
+      <input type="text" class="marcador-custom-input ${isCustom ? '' : 'hidden'}" 
+             placeholder="Digita o nome de quem marcou..." 
+             value="${isCustom ? nomeInicial.replace(/"/g, '&quot;') : ''}" 
+             oninput="aoAtualizarMarcadores()"
+             style="font-size:12px; padding:5px 8px; margin-top:2px; border:1px solid var(--border); border-radius:4px;">
+    </div>
+    <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+      <button type="button" class="stepper-btn" onclick="alterarGolosMarcador(this, -1)" title="Diminuir golo">−</button>
+      <input type="number" class="stepper-val" min="1" max="50" value="${golosIniciais || 1}" oninput="aoAtualizarMarcadores()">
+      <button type="button" class="stepper-btn" onclick="alterarGolosMarcador(this, 1)" title="Aumentar golo">+</button>
+      <span style="font-size:11px; color:var(--muted); min-width:28px;">${golosIniciais > 1 ? 'golos' : 'golo'}</span>
+    </div>
+    <button type="button" class="mini-btn reject" onclick="removerLinhaMarcador(this)" style="padding:5px 8px; flex-shrink:0;" title="Remover marcador">✕</button>
+  `;
+
+  container.appendChild(row);
+  aoAtualizarMarcadores();
+}
+
+function alterarGolosMarcador(btn, delta){
+  const row = btn.closest('.marcador-row');
+  if(!row) return;
+  const input = row.querySelector('.stepper-val');
+  const label = row.querySelector('span');
+  if(!input) return;
+  let val = parseInt(input.value, 10) || 1;
+  val = Math.max(1, val + delta);
+  input.value = val;
+  if(label) label.textContent = val > 1 ? 'golos' : 'golo';
+  aoAtualizarMarcadores();
+}
+
+function removerLinhaMarcador(btn){
+  const row = btn.closest('.marcador-row');
+  if(row){
+    row.remove();
+    aoAtualizarMarcadores();
+  }
+}
+
+function aoSelecionarMembro(select){
+  const row = select.closest('.marcador-row');
+  if(!row) return;
+  const customInput = row.querySelector('.marcador-custom-input');
+  if(select.value === '__outro__'){
+    customInput.classList.remove('hidden');
+    customInput.focus();
+  } else {
+    customInput.classList.add('hidden');
+  }
+  aoAtualizarMarcadores();
+}
+
+function aoAtualizarMarcadores(){
+  const container = document.getElementById('marcadores-container');
+  if(!container) return;
+  const rows = container.querySelectorAll('.marcador-row');
+  const avisoVazio = document.getElementById('marcadores-vazio-aviso');
+
+  if(rows.length === 0){
+    if(avisoVazio) avisoVazio.style.display = 'block';
+  } else {
+    if(avisoVazio) avisoVazio.style.display = 'none';
+  }
+
+  let totalGolos = 0;
+  const marcadoresArr = [];
+
+  rows.forEach(row => {
+    const sel = row.querySelector('.marcador-select');
+    const custom = row.querySelector('.marcador-custom-input');
+    const inputQtd = row.querySelector('.stepper-val');
+    const label = row.querySelector('span');
+
+    const qtd = Math.max(1, parseInt(inputQtd.value, 10) || 1);
+    inputQtd.value = qtd;
+    if(label) label.textContent = qtd > 1 ? 'golos' : 'golo';
+
+    let nome = '';
+    if(sel.value === '__outro__'){
+      nome = (custom.value || '').trim();
+    } else if(sel.value){
+      nome = sel.value.trim();
+    }
+
+    if(nome){
+      totalGolos += qtd;
+      marcadoresArr.push(`${nome} (${qtd})`);
+    }
+  });
+
+  const totalEl = document.getElementById('total-golos-marcadores');
+  const btnSyncQtd = document.getElementById('btn-sync-qtd');
+  if(totalEl) totalEl.textContent = totalGolos;
+  if(btnSyncQtd) btnSyncQtd.textContent = totalGolos;
+
+  // Atualiza campo res-marcadores
+  const resMarcadoresInput = document.getElementById('res-marcadores');
+  if(resMarcadoresInput && (!resMarcadoresInput.dataset.manualEdit || resMarcadoresInput.dataset.manualEdit !== 'true')){
+    resMarcadoresInput.value = marcadoresArr.join(', ');
+  }
+
+  // Se o campo de golos a favor estiver vazio ou 0 e tivermos golos registados, sugere automaticamente
+  const gfInput = document.getElementById('res-golos-favor');
+  if(gfInput && (gfInput.value === '' || gfInput.value === '0') && totalGolos > 0){
+    gfInput.value = totalGolos;
+    autoSugerirDesfecho();
+  }
+}
+
+function aplicarTotalGolosAosFavor(){
+  const totalEl = document.getElementById('total-golos-marcadores');
+  const qtd = parseInt(totalEl ? totalEl.textContent : '0', 10) || 0;
+  const gfInput = document.getElementById('res-golos-favor');
+  if(gfInput){
+    gfInput.value = qtd;
+    autoSugerirDesfecho();
+    showMsg(`✓ Golos do FC New Vila atualizados para ${qtd}!`, true);
+  }
+}
+
+function autoSugerirDesfecho(){
+  const gf = document.getElementById('res-golos-favor').value;
+  const gc = document.getElementById('res-golos-contra').value;
+  if(gf !== '' && gc !== ''){
+    const numF = parseInt(gf, 10);
+    const numC = parseInt(gc, 10);
+    const desfechoEl = document.getElementById('res-desfecho');
+    if(desfechoEl && !isNaN(numF) && !isNaN(numC)){
+      if(numF > numC) desfechoEl.value = 'vitoria';
+      else if(numF === numC) desfechoEl.value = 'empate';
+      else desfechoEl.value = 'derrota';
+    }
+  }
+}
+
+function toggleEditarMarcadoresTexto(){
+  const inp = document.getElementById('res-marcadores');
+  const btn = document.getElementById('btn-toggle-manual');
+  if(inp.dataset.manualEdit === 'true'){
+    inp.dataset.manualEdit = 'false';
+    btn.textContent = 'Ajustar texto manualmente';
+    aoAtualizarMarcadores();
+  } else {
+    inp.dataset.manualEdit = 'true';
+    btn.textContent = 'Voltar a sincronizar com a lista';
+    inp.focus();
+  }
+}
+
+async function abrirModalResultado(id){
   const j = listaJogosCache.find(x => x.id === id);
   if(!j) return;
+
+  // Garante que o plantel e membros estão disponíveis para o seletor
+  if(!listaJogadoresCache || listaJogadoresCache.length === 0){
+    const { data } = await sb.from('jogadores').select('*').order('nome');
+    if(data) listaJogadoresCache = data;
+  }
+  if(!listaMembrosCache || listaMembrosCache.length === 0){
+    const { data } = await sb.rpc('listar_membros');
+    if(data) listaMembrosCache = data;
+  }
 
   const advInfo = extrairAdversarioEContacto(j.adversario);
   const det = parseDetalhesJogo(j.resultado, j.resultado_estado);
@@ -1010,8 +1497,41 @@ function abrirModalResultado(id){
     document.getElementById('res-golos-contra').value = '';
   }
 
-  document.getElementById('res-marcadores').value = det.marcadores ? det.marcadores.replace(/^golos:?/i,'').trim() : '';
+  const resMarcadoresInput = document.getElementById('res-marcadores');
+  resMarcadoresInput.dataset.manualEdit = 'false';
+  const btnToggle = document.getElementById('btn-toggle-manual');
+  if(btnToggle) btnToggle.textContent = '✏️ Ajustar texto manualmente';
+
+  const textoMarcadores = det.marcadores ? det.marcadores.replace(/^golos:?/i,'').trim() : '';
+  resMarcadoresInput.value = textoMarcadores;
   document.getElementById('res-notas').value = det.resumo || '';
+
+  // Limpa o container e popula com os marcadores
+  const container = document.getElementById('marcadores-container');
+  container.innerHTML = '';
+
+  if(textoMarcadores){
+    const partes = textoMarcadores.split(/[,;·]+/).map(s => s.trim()).filter(Boolean);
+    partes.forEach(p => {
+      const m1 = p.match(/^(.*?)\s*\((\d+)(?:\s*golos?)?\)$/i);
+      if(m1){
+        adicionarLinhaMarcador(m1[1].trim(), parseInt(m1[2], 10));
+      } else {
+        const m2 = p.match(/^(\d+)\s*(?:x|-)?\s*(.*?)$/i);
+        if(m2 && isNaN(m2[2])){
+          adicionarLinhaMarcador(m2[2].trim(), parseInt(m2[1], 10));
+        } else {
+          adicionarLinhaMarcador(p, 1);
+        }
+      }
+    });
+  } else {
+    // Se não há marcadores prévios, adiciona 1 linha pronta para facilitar a escolha rápida
+    adicionarLinhaMarcador('', 1);
+  }
+
+  aoAtualizarMarcadores();
+  autoSugerirDesfecho();
 
   document.getElementById('modal-resultado-jogo').classList.remove('hidden');
 }
@@ -1025,6 +1545,9 @@ async function salvarModalResultado(){
   const desfecho = document.getElementById('res-desfecho').value;
   const gf = document.getElementById('res-golos-favor').value;
   const gc = document.getElementById('res-golos-contra').value;
+
+  // Garante sincronização dos marcadores
+  aoAtualizarMarcadores();
   const marcadores = document.getElementById('res-marcadores').value.trim();
   const notas = document.getElementById('res-notas').value.trim();
 
@@ -1066,95 +1589,616 @@ async function salvarModalResultado(){
 
   if(error){ showMsg('Erro ao guardar resultado: ' + error.message); return; }
 
-  showMsg('Resultado, placar e marcadores guardados com sucesso!', true);
+  showMsg('✓ Resultado, placar e marcadores guardados com sucesso!', true);
   fecharModalResultado();
   carregarJogos();
 }
 
-// ---- Equipamentos ----
+// ---- Gestão Financeira, Quotas & Equipamentos ----
 const ESTADOS = { pedido: 'Pedido', pago: 'Pago', entregue: 'Entregue' };
 
+let listaEquipamentosCache = [];
+let listaPagamentosCache = [];
+let filtroDevedoresAtivo = 'todos';
+let filtroHistoricoAtivo = 'todos';
+
+// Configuração do valor base da quota mensal
+let valorQuotaMensal = parseInt(localStorage.getItem('fcnv_quota_valor') || '1000', 10);
+
+const DATA_INICIO_COBRANCA_QUOTAS = '2026-11-30';
+
+const MESES_EPOCA = [
+  { id: '2026-11', nome: 'Novembro 2026', curto: 'Nov 2026' },
+  { id: '2026-12', nome: 'Dezembro 2026', curto: 'Dez 2026' },
+  { id: '2027-01', nome: 'Janeiro 2027', curto: 'Jan 2027' },
+  { id: '2027-02', nome: 'Fevereiro 2027', curto: 'Fev 2027' },
+  { id: '2027-03', nome: 'Março 2027', curto: 'Mar 2027' },
+  { id: '2027-04', nome: 'Abril 2027', curto: 'Abr 2027' },
+  { id: '2027-05', nome: 'Maio 2027', curto: 'Mai 2027' }
+];
+
+function atualizarValorBaseQuota(val){
+  const n = parseInt(val, 10);
+  if(isNaN(n) || n < 0) return;
+  valorQuotaMensal = n;
+  try{ localStorage.setItem('fcnv_quota_valor', String(n)); }catch(e){}
+  recalcularPainelFinanceiro();
+}
+
+function inicializarInputsFinanceiros(){
+  const inputQuota = document.getElementById('config-valor-quota');
+  if(inputQuota) inputQuota.value = valorQuotaMensal;
+
+  const selectMes = document.getElementById('p-mes-referencia');
+  if(selectMes){
+    selectMes.innerHTML = MESES_EPOCA.map((m, idx) => 
+      `<option value="${m.id}" ${idx === 0 ? 'selected' : ''}>${m.nome}</option>`
+    ).join('');
+  }
+}
+
+// ---- Equipamentos ----
 async function carregarEquipamentos(){
-  const { data, error } = await sb.from('pedidos_equipamento').select('*, jogadores(nome)').order('created_at', {ascending:false});
-  if(error){ showMsg(error.message); return; }
-  document.getElementById('equipamentos-tbody').innerHTML = (data && data.length) ? data.map(e => `
-    <tr>
-      <td><b>${e.jogadores?.nome || '—'}</b></td>
-      <td>${e.tamanho || '—'}</td>
-      <td>${e.numero || '—'}</td>
-      <td><span class="badge ${e.estado}">${ESTADOS[e.estado] || e.estado}</span></td>
-      <td>
-        <select class="mini-select" onchange="mudarEstadoEquip('${e.id}', this.value)">
-          <option value="pedido" ${e.estado==='pedido'?'selected':''}>Pedido</option>
-          <option value="pago" ${e.estado==='pago'?'selected':''}>Pago</option>
-          <option value="entregue" ${e.estado==='entregue'?'selected':''}>Entregue</option>
-        </select>
-      </td>
-    </tr>`
-  ).join('') : '<tr><td colspan="5" class="vazio">Sem pedidos de equipamento.</td></tr>';
+  const { data, error } = await sb.from('pedidos_equipamento').select('*, jogadores(nome, numero_camisola)').order('created_at', {ascending:false});
+  if(error){ showMsg('Erro ao carregar equipamentos: ' + error.message); return; }
+  
+  listaEquipamentosCache = data || [];
+  renderizarTabelaEquipamentos();
+  recalcularPainelFinanceiro();
+}
+
+function renderizarTabelaEquipamentos(){
+  const tbody = document.getElementById('equipamentos-tbody');
+  if(!tbody) return;
+
+  if(!listaEquipamentosCache || listaEquipamentosCache.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" class="vazio">Sem pedidos de equipamento registados.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = listaEquipamentosCache.map(e => {
+    const nomeJogador = e.jogadores?.nome || '—';
+    const numCamisola = e.jogadores?.numero_camisola ? `#${e.jogadores.numero_camisola}` : '';
+    const tamanho = e.tamanho || '—';
+    const numPretendido = e.numero ? `#${e.numero}` : '—';
+
+    let badgeClass = 'pedido';
+    if(e.estado === 'pago') badgeClass = 'pago';
+    else if(e.estado === 'entregue') badgeClass = 'entregue';
+
+    return `
+      <tr>
+        <td><b>${nomeJogador}</b> <span style="font-size:11px; color:var(--muted);">${numCamisola}</span></td>
+        <td>${tamanho}</td>
+        <td>${numPretendido}</td>
+        <td>
+          <span class="badge ${badgeClass}">${ESTADOS[e.estado] || e.estado}</span>
+        </td>
+        <td>
+          <div style="display:flex; gap:4px; align-items:center;">
+            <select class="mini-select" onchange="mudarEstadoEquip('${e.id}', this.value)" style="font-size:11px; padding:3px 6px;">
+              <option value="pedido" ${e.estado==='pedido'?'selected':''}>Pedido</option>
+              <option value="pago" ${e.estado==='pago'?'selected':''}>Pago</option>
+              <option value="entregue" ${e.estado==='entregue'?'selected':''}>Entregue</option>
+            </select>
+            <button type="button" class="mini-btn reject" onclick="eliminarEquipamento('${e.id}')" title="Remover pedido">✕</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function aoMudarJogadorEquipamento(){
+  const jId = document.getElementById('e-jogador').value;
+  if(!jId) return;
+  const jog = (listaJogadoresCache || []).find(j => j.id === jId);
+  if(jog && jog.numero_camisola){
+    document.getElementById('e-numero').value = jog.numero_camisola;
+  }
 }
 
 async function addEquipamento(){
   const jogador_id = document.getElementById('e-jogador').value;
   if(!jogador_id){ showMsg('Escolhe um jogador.'); return; }
-  const numero = document.getElementById('e-numero').value;
-  const body = {
+  
+  const tamanho = document.getElementById('e-tamanho').value;
+  const numeroVal = document.getElementById('e-numero').value;
+
+  const payload = {
     jogador_id,
-    tamanho: document.getElementById('e-tamanho').value,
-    numero: numero ? parseInt(numero, 10) : null
+    tamanho,
+    numero: numeroVal ? parseInt(numeroVal, 10) : null,
+    estado: 'pedido'
   };
-  const { error } = await sb.from('pedidos_equipamento').insert(body);
-  if(error){ showMsg(error.message); return; }
-  showMsg('Pedido de equipamento registado.', true);
+
+  const { error } = await sb.from('pedidos_equipamento').insert(payload);
+  if(error){ showMsg('Erro ao registar equipamento: ' + error.message); return; }
+  
+  showMsg('Pedido de equipamento registado com sucesso.', true);
   document.getElementById('e-numero').value = '';
   carregarEquipamentos();
 }
 
 async function mudarEstadoEquip(id, estado){
   const { error } = await sb.from('pedidos_equipamento').update({ estado }).eq('id', id);
-  if(error){ showMsg(error.message); return; }
+  if(error){ showMsg('Erro ao atualizar estado: ' + error.message); return; }
   showMsg('Estado do equipamento atualizado.', true);
   carregarEquipamentos();
 }
 
-// ---- Pagamentos ----
+async function eliminarEquipamento(id){
+  if(!confirm('Desejas remover este registo de equipamento?')) return;
+  const { error } = await sb.from('pedidos_equipamento').delete().eq('id', id);
+  if(error){ showMsg('Erro ao remover: ' + error.message); return; }
+  showMsg('Registo de equipamento removido.', true);
+  carregarEquipamentos();
+}
+
+// ---- Pagamentos & Tesouraria ----
 async function carregarPagamentos(){
-  const { data, error } = await sb.from('pagamentos').select('*, jogadores(nome)').order('data_pagamento', {ascending:false});
-  if(error){ showMsg(error.message); return; }
-  document.getElementById('pagamentos-tbody').innerHTML = (data && data.length) ? data.map(p => `
-    <tr>
-      <td>${p.data_pagamento}</td>
-      <td><b>${p.jogadores?.nome || '—'}</b></td>
-      <td><b>${Number(p.valor||0).toLocaleString('pt-PT')} Kz</b></td>
-      <td>${p.comprovativo_url ? `<a href="${p.comprovativo_url}" target="_blank" style="color:var(--navy); font-weight:600;">Ver comprovativo ↗</a>` : '—'}</td>
-    </tr>`
-  ).join('') : '<tr><td colspan="4" class="vazio">Sem pagamentos registados.</td></tr>';
+  const { data, error } = await sb.from('pagamentos').select('*, jogadores(nome, numero_camisola)').order('data_pagamento', {ascending:false});
+  if(error){ showMsg('Erro ao carregar pagamentos: ' + error.message); return; }
+  
+  listaPagamentosCache = data || [];
+  renderizarTabelaPagamentos();
+  recalcularPainelFinanceiro();
+}
+
+function filtrarHistoricoPagamentos(tipo){
+  filtroHistoricoAtivo = tipo;
+  ['todos', 'quota', 'equipamento', 'outro'].forEach(t => {
+    const el = document.getElementById('f-hist-' + (t === 'equipamento' ? 'equip' : t));
+    if(el){
+      if(t === tipo) el.classList.add('active');
+      else el.classList.remove('active');
+    }
+  });
+  renderizarTabelaPagamentos();
+}
+
+function renderizarTabelaPagamentos(){
+  const tbody = document.getElementById('pagamentos-tbody');
+  if(!tbody) return;
+
+  let filtrados = listaPagamentosCache || [];
+  if(filtroHistoricoAtivo !== 'todos'){
+    filtrados = filtrados.filter(p => (p.tipo || 'quota') === filtroHistoricoAtivo);
+  }
+
+  if(!filtrados || filtrados.length === 0){
+    tbody.innerHTML = '<tr><td colspan="7" class="vazio">Sem pagamentos registados para este filtro.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtrados.map(p => {
+    const dataPag = p.data_pagamento || '—';
+    const nomeJogador = p.jogadores?.nome || '—';
+    const tipo = p.tipo || 'quota';
+
+    let tipoBadge = '<span class="badge badge-quota">Quota</span>';
+    let detalhe = p.mes_referencia || 'Quota Mensal';
+    
+    // Formata o detalhe do mês
+    if(tipo === 'quota' && p.mes_referencia){
+      const mesObj = MESES_EPOCA.find(m => m.id === p.mes_referencia);
+      detalhe = mesObj ? mesObj.nome : p.mes_referencia;
+    } else if(tipo === 'equipamento'){
+      tipoBadge = '<span class="badge badge-equip">Equipamento</span>';
+      detalhe = p.item_equipamento || 'Equipamento do Clube';
+    } else if(tipo === 'outro'){
+      tipoBadge = '<span class="badge badge-outro">Outro</span>';
+      detalhe = p.observacoes || 'Pagamento Diverso';
+    }
+
+    if(p.observacoes && tipo !== 'outro'){
+      detalhe += ` <span style="font-size:11px; color:var(--muted); display:block;">Nota: ${p.observacoes}</span>`;
+    }
+
+    const valorStr = Number(p.valor || 0).toLocaleString('pt-PT') + ' Kz';
+    const compLink = p.comprovativo_url ? `<a href="${p.comprovativo_url}" target="_blank" style="color:var(--navy); font-weight:600;">Ver comprovativo</a>` : '—';
+
+    return `
+      <tr>
+        <td>${dataPag}</td>
+        <td><b>${nomeJogador}</b></td>
+        <td>${tipoBadge}</td>
+        <td>${detalhe}</td>
+        <td><b>${valorStr}</b></td>
+        <td>${compLink}</td>
+        <td>
+          <button type="button" class="mini-btn reject" onclick="eliminarPagamento('${p.id}')" title="Eliminar este pagamento">✕</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function eliminarPagamento(id){
+  if(!confirm('Desejas anular e remover este registo de pagamento?')) return;
+  const { error } = await sb.from('pagamentos').delete().eq('id', id);
+  if(error){ showMsg('Erro ao eliminar pagamento: ' + error.message); return; }
+  showMsg('Pagamento removido.', true);
+  carregarPagamentos();
+}
+
+function aoMudarTipoPagamento(){
+  const tipo = document.getElementById('p-tipo').value;
+  const rowQuota = document.getElementById('row-campo-quota');
+  const rowEquip = document.getElementById('row-campo-equipamento');
+  const rowOutro = document.getElementById('row-campo-outro');
+
+  rowQuota.classList.add('hidden');
+  rowEquip.classList.add('hidden');
+  rowOutro.classList.add('hidden');
+
+  if(tipo === 'quota'){
+    rowQuota.classList.remove('hidden');
+    document.getElementById('p-valor').value = valorQuotaMensal;
+  } else if(tipo === 'equipamento'){
+    rowEquip.classList.remove('hidden');
+    atualizarDropdownEquipamentosDoJogador();
+  } else {
+    rowOutro.classList.remove('hidden');
+  }
+}
+
+function aoMudarJogadorPagamento(){
+  const tipo = document.getElementById('p-tipo').value;
+  if(tipo === 'equipamento'){
+    atualizarDropdownEquipamentosDoJogador();
+  } else if(tipo === 'quota'){
+    sugerirProximoMesPendente();
+  }
+}
+
+function atualizarDropdownEquipamentosDoJogador(){
+  const jId = document.getElementById('p-jogador').value;
+  const selEquip = document.getElementById('p-item-equipamento');
+  if(!selEquip) return;
+
+  const pedidosJogador = (listaEquipamentosCache || []).filter(e => e.jogador_id === jId && e.estado !== 'pago');
+  
+  if(pedidosJogador.length > 0){
+    selEquip.innerHTML = pedidosJogador.map(e => 
+      `<option value="${e.item || 'Kit Principal Oficial'}" data-pedido-id="${e.id}" data-valor="${e.valor || 5000}">
+        ${e.item || 'Kit Principal'} (Tamanho ${e.tamanho || 'M'} - ${Number(e.valor || 5000).toLocaleString('pt-PT')} Kz)
+      </option>`
+    ).join('');
+    aoSelecionarItemEquipamentoPagamento();
+  } else {
+    selEquip.innerHTML = `
+      <option value="Kit Principal Oficial" data-valor="5000">Kit Principal Oficial (5.000 Kz)</option>
+      <option value="Kit Alternativo" data-valor="5000">Kit Alternativo (5.000 Kz)</option>
+      <option value="Fato de Treino / Agasalho" data-valor="7500">Fato de Treino / Agasalho (7.500 Kz)</option>
+      <option value="Calções & Meias" data-valor="2500">Calções & Meias (2.500 Kz)</option>
+      <option value="Colete de Treino" data-valor="2000">Colete de Treino (2.000 Kz)</option>
+    `;
+    aoSelecionarItemEquipamentoPagamento();
+  }
+}
+
+function aoSelecionarItemEquipamentoPagamento(){
+  const selEquip = document.getElementById('p-item-equipamento');
+  if(!selEquip || selEquip.selectedIndex < 0) return;
+  const opt = selEquip.options[selEquip.selectedIndex];
+  const v = opt.getAttribute('data-valor');
+  if(v){
+    document.getElementById('p-valor').value = v;
+  }
+}
+
+function sugerirProximoMesPendente(){
+  const jId = document.getElementById('p-jogador').value;
+  if(!jId) return;
+
+  const pagos = (listaPagamentosCache || [])
+    .filter(p => p.jogador_id === jId && (p.tipo === 'quota' || !p.tipo))
+    .map(p => p.mes_referencia);
+
+  const mesEmFalta = MESES_EPOCA.find(m => !pagos.includes(m.id));
+  if(mesEmFalta){
+    document.getElementById('p-mes-referencia').value = mesEmFalta.id;
+  }
 }
 
 async function addPagamento(){
   const jogador_id = document.getElementById('p-jogador').value;
   const valor = document.getElementById('p-valor').value;
-  if(!jogador_id || !valor){ showMsg('Preenche o jogador e o valor.'); return; }
+  const tipo = document.getElementById('p-tipo').value;
+
+  if(!jogador_id || !valor){
+    showMsg('Preenche o jogador e o valor.');
+    return;
+  }
+
   const data_pagamento = document.getElementById('p-data').value || new Date().toISOString().slice(0,10);
+  const comprovativo_url = document.getElementById('p-comprovativo').value.trim() || null;
+  
+  let mes_referencia = null;
+  let item_equipamento = null;
+  let observacoes = document.getElementById('p-observacoes').value.trim() || null;
+
+  if(tipo === 'quota'){
+    mes_referencia = document.getElementById('p-mes-referencia').value;
+  } else if(tipo === 'equipamento'){
+    item_equipamento = document.getElementById('p-item-equipamento').value;
+  } else if(tipo === 'outro'){
+    const desc = document.getElementById('p-descricao-outro').value.trim();
+    if(desc){
+      observacoes = observacoes ? `${desc} | ${observacoes}` : desc;
+    }
+  }
+
   const body = {
     jogador_id,
     valor: parseFloat(valor),
+    tipo,
+    mes_referencia,
+    item_equipamento,
+    observacoes,
     data_pagamento,
-    comprovativo_url: document.getElementById('p-comprovativo').value.trim() || null,
+    comprovativo_url,
     registado_por: membro.id
   };
-  const { error } = await sb.from('pagamentos').insert(body);
-  if(error){ showMsg(error.message); return; }
+
+  let { error } = await sb.from('pagamentos').insert(body);
+
+  // Fallback se a tabela no Supabase ainda não tiver as colunas extras
+  if(error && error.message && error.message.includes('column')){
+    const fallbackBody = {
+      jogador_id,
+      valor: parseFloat(valor),
+      data_pagamento,
+      comprovativo_url,
+      registado_por: membro.id
+    };
+    const retry = await sb.from('pagamentos').insert(fallbackBody);
+    error = retry.error;
+  }
+
+  if(error){ showMsg('Erro ao guardar pagamento: ' + error.message); return; }
+
+  // Se for pagamento de equipamento vinculado a um pedido pendente, marca como pago
+  if(tipo === 'equipamento'){
+    const selEquip = document.getElementById('p-item-equipamento');
+    const opt = selEquip.options[selEquip.selectedIndex];
+    const pedidoId = opt ? opt.getAttribute('data-pedido-id') : null;
+    if(pedidoId){
+      await sb.from('pedidos_equipamento').update({ estado: 'pago' }).eq('id', pedidoId);
+      await carregarEquipamentos();
+    }
+  }
+
   showMsg('Pagamento registado com sucesso.', true);
   document.getElementById('p-valor').value = '';
   document.getElementById('p-comprovativo').value = '';
-  carregarPagamentos();
+  document.getElementById('p-observacoes').value = '';
+  if(document.getElementById('p-descricao-outro')) document.getElementById('p-descricao-outro').value = '';
+
+  await carregarPagamentos();
+}
+
+// ---- Cálculo e Painel de Devedores ----
+function recalcularPainelFinanceiro(){
+  const jogadores = listaJogadoresCache || [];
+  const pagamentos = listaPagamentosCache || [];
+  const equipamentos = listaEquipamentosCache || [];
+
+  // 1. Total Arrecadado
+  const totalArrecadado = pagamentos.reduce((acc, p) => acc + Number(p.valor || 0), 0);
+  const elArrecadado = document.getElementById('kpi-total-arrecadado');
+  if(elArrecadado) elArrecadado.textContent = totalArrecadado.toLocaleString('pt-PT') + ' Kz';
+  
+  const elQtd = document.getElementById('kpi-qtd-pagamentos');
+  if(elQtd) elQtd.textContent = `${pagamentos.length} transações registadas`;
+
+  const hoje = new Date().toISOString().slice(0, 10);
+
+  // As quotas começam a ser cobradas estritamente a partir de 30 de Novembro de 2026.
+  // Antes dessa data, não há quotas em atraso / exigíveis para os atletas.
+  const mesesAtivos = [];
+  if(hoje >= '2026-11-30'){
+    mesesAtivos.push(MESES_EPOCA.find(m => m.id === '2026-11'));
+  }
+  if(hoje >= '2026-12-30'){
+    mesesAtivos.push(MESES_EPOCA.find(m => m.id === '2026-12'));
+  }
+  if(hoje >= '2027-01-30'){
+    mesesAtivos.push(MESES_EPOCA.find(m => m.id === '2027-01'));
+  }
+  const mesesExigiveis = mesesAtivos.filter(Boolean);
+
+  // 2. Análise por Atleta
+  let somaDividaTotalClube = 0;
+  let contagemDevedores = 0;
+
+  const dadosDevedores = jogadores.map(j => {
+    // Quotas pagas
+    const pagosDoAtleta = pagamentos.filter(p => p.jogador_id === j.id);
+    const mesesPagos = pagosDoAtleta
+      .filter(p => (p.tipo === 'quota' || !p.tipo) && p.mes_referencia)
+      .map(p => p.mes_referencia);
+
+    // Quotas em falta apenas dos meses já exigíveis
+    const quotasEmFalta = mesesExigiveis.filter(m => !mesesPagos.includes(m.id));
+    const dividaQuotas = quotasEmFalta.length * valorQuotaMensal;
+
+    // Equipamentos pendentes de pagamento
+    const equipsDoAtleta = equipamentos.filter(e => e.jogador_id === j.id);
+    const equipsEmFalta = equipsDoAtleta.filter(e => e.estado !== 'pago');
+    const dividaEquipamentos = equipsEmFalta.reduce((acc, e) => acc + Number(e.valor || 5000), 0);
+
+    const saldoDevedor = dividaQuotas + dividaEquipamentos;
+    if(saldoDevedor > 0){
+      somaDividaTotalClube += saldoDevedor;
+      contagemDevedores++;
+    }
+
+    return {
+      jogador: j,
+      quotasEmFalta,
+      dividaQuotas,
+      equipsEmFalta,
+      dividaEquipamentos,
+      saldoDevedor,
+      isDevedor: saldoDevedor > 0,
+      mesesPagos
+    };
+  });
+
+  // Atualiza KPIs
+  const elDivida = document.getElementById('kpi-total-divida');
+  if(elDivida) elDivida.textContent = somaDividaTotalClube.toLocaleString('pt-PT') + ' Kz';
+
+  const elSubDivida = document.getElementById('kpi-sub-divida');
+  if(elSubDivida){
+    if(hoje < '2026-11-30'){
+      elSubDivida.textContent = 'Cobrança de quotas inicia a 30/11/2026';
+    } else {
+      elSubDivida.textContent = 'Quotas e materiais pendentes';
+    }
+  }
+
+  const elAtletasDevedores = document.getElementById('kpi-atletas-devedores');
+  if(elAtletasDevedores) elAtletasDevedores.textContent = contagemDevedores;
+
+  const elSubAtletas = document.getElementById('kpi-sub-atletas');
+  if(elSubAtletas) elSubAtletas.textContent = `de ${jogadores.length} atletas do plantel`;
+
+  const elResumo = document.getElementById('devedores-contador-resumo');
+  if(elResumo) elResumo.textContent = `${contagemDevedores} em dívida / ${jogadores.length} atletas`;
+
+  // Renderiza Tabela de Devedores
+  renderizarTabelaDevedores(dadosDevedores);
+}
+
+function definirFiltroDevedores(tipo){
+  filtroDevedoresAtivo = tipo;
+  ['todos', 'devedores', 'emdia'].forEach(t => {
+    const el = document.getElementById('f-filtro-' + t);
+    if(el){
+      if(t === tipo) el.classList.add('active');
+      else el.classList.remove('active');
+    }
+  });
+  recalcularPainelFinanceiro();
+}
+
+function filtrarTabelaDevedores(){
+  recalcularPainelFinanceiro();
+}
+
+function renderizarTabelaDevedores(dados){
+  const tbody = document.getElementById('devedores-tbody');
+  if(!tbody) return;
+
+  const hoje = new Date().toISOString().slice(0, 10);
+  const termo = (document.getElementById('busca-devedor')?.value || '').toLowerCase().trim();
+
+  let lista = dados.filter(d => {
+    const nome = (d.jogador?.nome || '').toLowerCase();
+    const coincide = !termo || nome.includes(termo);
+    if(!coincide) return false;
+
+    if(filtroDevedoresAtivo === 'devedores') return d.isDevedor;
+    if(filtroDevedoresAtivo === 'emdia') return !d.isDevedor;
+    return true;
+  });
+
+  if(lista.length === 0){
+    tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum atleta corresponde aos filtros atuais.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = lista.map(d => {
+    const j = d.jogador;
+    const nome = j.nome || '—';
+    const numCamisola = j.numero_camisola ? `#${j.numero_camisola}` : '';
+
+    // Badges de quotas em falta
+    let quotasHtml = '<span class="badge badge-emdia">Em dia</span>';
+    if(d.quotasEmFalta.length > 0){
+      quotasHtml = d.quotasEmFalta.map(m => `<span class="badge-mes-falta">${m.curto} (${valorQuotaMensal.toLocaleString('pt-PT')} Kz)</span>`).join('');
+    } else if(hoje < '2026-11-30'){
+      if(d.mesesPagos && d.mesesPagos.includes('2026-11')){
+        quotasHtml = '<span class="badge badge-emdia">Nov 2026 pago</span>';
+      } else {
+        quotasHtml = '<span class="badge badge-emdia" title="Cobrança inicia a 30/11/2026">Inicia 30/11</span>';
+      }
+    }
+
+    // Badges de equipamentos em falta
+    let equipsHtml = '<span class="badge badge-emdia">Sem pendências</span>';
+    if(d.equipsEmFalta.length > 0){
+      equipsHtml = d.equipsEmFalta.map(e => 
+        `<span class="badge-equip-falta">Tam ${e.tamanho || 'M'} (${Number(e.valor || 5000).toLocaleString('pt-PT')} Kz)</span>`
+      ).join('');
+    }
+
+    // Saldo Total
+    const saldoStr = Number(d.saldoDevedor).toLocaleString('pt-PT') + ' Kz';
+    const saldoEstilo = d.isDevedor ? 'color:var(--danger); font-size:14px;' : 'color:var(--success); font-size:14px;';
+    
+    // Badge de Situação
+    const situacaoBadge = d.isDevedor 
+      ? '<span class="badge badge-devedor">Devedor</span>'
+      : '<span class="badge badge-emdia">Regularizado</span>';
+
+    // Ação
+    const acaoBtn = `
+      <button type="button" class="mini-btn" onclick="iniciarRegistoPagamentoAtleta('${j.id}', ${d.dividaQuotas}, ${d.dividaEquipamentos})" style="font-size:11px; padding:4px 8px; white-space:nowrap;">
+        Registar Pagamento
+      </button>
+    `;
+
+    return `
+      <tr>
+        <td><b>${nome}</b> <span style="font-size:11px; color:var(--muted);">${numCamisola}</span></td>
+        <td>${quotasHtml}</td>
+        <td>${equipsHtml}</td>
+        <td><b style="${saldoEstilo}">${saldoStr}</b></td>
+        <td>${situacaoBadge}</td>
+        <td>${acaoBtn}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function iniciarRegistoPagamentoAtleta(jogadorId, dividaQuotas, dividaEquipamentos){
+  const selJog = document.getElementById('p-jogador');
+  if(!selJog) return;
+  selJog.value = jogadorId;
+
+  // Decide se preenche Quota ou Equipamento
+  if(dividaQuotas > 0){
+    document.getElementById('p-tipo').value = 'quota';
+    aoMudarTipoPagamento();
+    sugerirProximoMesPendente();
+    document.getElementById('p-valor').value = valorQuotaMensal;
+  } else if(dividaEquipamentos > 0){
+    document.getElementById('p-tipo').value = 'equipamento';
+    aoMudarTipoPagamento();
+  } else {
+    document.getElementById('p-tipo').value = 'quota';
+    aoMudarTipoPagamento();
+    document.getElementById('p-valor').value = valorQuotaMensal;
+  }
+
+  // Scroll suave até ao formulário
+  const card = document.getElementById('card-registar-pagamento');
+  if(card){
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    card.style.outline = '2px solid var(--gold)';
+    setTimeout(() => { card.style.outline = 'none'; }, 2000);
+  }
 }
 
 // ---- Membros ----
 async function carregarMembros(){
   const { data, error } = await sb.rpc('listar_membros');
   if(error){ showMsg(error.message); return; }
+  listaMembrosCache = data || [];
   document.getElementById('membros-tbody').innerHTML = (data && data.length) ? data.map(m => `
     <tr>
       <td><b>${m.nome}</b></td>
@@ -1179,13 +2223,14 @@ try{
   }
 }catch(e){}
 
-// Define data de hoje nos inputs de data
+// Inicializações de data e inputs financeiros
 try{
   const hoje = new Date().toISOString().slice(0,10);
   const gData = document.getElementById('g-data');
   if(gData && !gData.value) gData.value = hoje;
   const pData = document.getElementById('p-data');
   if(pData && !pData.value) pData.value = hoje;
+  inicializarInputsFinanceiros();
 }catch(e){}
 </script>
 </body>
